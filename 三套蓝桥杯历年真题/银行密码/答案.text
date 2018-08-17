@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+
+
+void Change(char input[100])
+{
+	int num[6]={0};
+	int t,s,j,len,n=0,sum;
+	len=strlen(input);
+	
+	for (t=0;t<len;t+=6)
+	{
+		for (s=t,j=0;s<t+6;s++,j++)
+		{
+			if (s>=len)
+			{
+				break;
+			}
+			num[j]+=(int)input[s];
+
+		}
+	}
+	while(n<6)
+	{
+		sum=num[n];
+		if(sum==0)break;
+
+		while(sum>=10)
+		{
+			if (sum/100)
+			{
+				sum=sum/100+sum%100/10+sum%10;
+			}
+			else
+			{
+				sum=sum/10+sum%10;
+			}
+			
+		}
+		num[n]=sum;
+		n++;
+	}
+	for (t=0;t<6;t++)
+	{	
+		if (num[t]==0)
+		{
+			break;
+		}
+		printf("%d",num[t]);
+	}
+
+}
+
+
+
+
+
+
+
+void main()
+{
+	int n,i;
+	char input[100][100];
+	scanf("%d",&n);
+	fflush(stdin);
+	for (i=1;i<=n;i++)
+	{
+		gets(input[i]);
+	}
+	for (i=1;i<=n;i++)
+	{
+		Change(input[i]);
+		printf("\n");
+	}
+
+}

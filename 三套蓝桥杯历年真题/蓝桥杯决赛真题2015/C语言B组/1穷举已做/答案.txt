@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+
+int Check(int a,int b,int c)
+{
+	if (315==3*a+7*b+c&&420==4*a+10*b+c)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int main()
+{
+	int a,b,c,flag=1;
+	for (a=0;a<=50;a++)
+	{
+		for (b=0;b<=50;b++)
+		{
+			for (c=0;c<=50;c++)
+			{
+				if (Check(a,b,c))
+				{
+					printf("%d %d %d\n",a,b,c);
+					printf("%d\n",a+b+c);
+					flag=0;
+					break;
+				}
+			}
+			if (flag==0)
+			{
+				break;
+			}
+		}
+		if (flag==0)
+		{
+			break;
+		}
+	}
+
+	return 0;
+}

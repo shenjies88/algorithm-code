@@ -1,0 +1,168 @@
+#include <iostream>
+#define MAXVALUE 26
+#define MAX 999999
+
+typedef struct 
+{	
+	int Ver[MAXVALUE];
+	int Vernum;
+	int Edegsnum;
+	int Arc[MAXVALUE][MAXVALUE];
+	int Kind;
+}G;
+
+
+
+
+
+
+void Outlin(G *T)
+{
+	int i,j;
+	for (i=0;i<T->Edegsnum;i++)
+	{
+		printf("\t%d",T->Ver[i]);
+	}
+	printf("\n");
+	for (i=0;i<T->Edegsnum;i++)
+	{
+		printf("%d\t",T->Ver[i]);
+		for (j=0;j<T->Edegsnum;j++)
+		{
+			if (T->Arc[i][j]==MAX)
+			{
+				printf("无\t");
+			}
+			else
+			{
+				printf("%d\t",T->Arc[i][j]);
+			}
+		}
+		printf("\n");
+	}
+
+}
+
+
+void Initial(G *T)
+{
+	int i,j;
+	printf("请输入图的类型以及顶点和边的数量,有向图1 无向图0:");
+	scanf("%d%d%d",&T->Kind,&T->Edegsnum,&T->Vernum);
+	for (i=0;i<T->Edegsnum;i++)
+	{
+		for (j=0;j<T->Edegsnum;j++)
+		{
+			T->Arc[i][j]=MAX;
+		}
+	}
+
+}
+
+
+void CreatG(G *T)
+{
+	int i,j,k,start,end,weight;
+	for (i=1;i<=T->Edegsnum;i++)
+	{
+		printf("请输入第%d个顶点的值",i);
+		scanf("%d",&T->Ver[i-1]);
+	}
+	for (i=1;i<=T->Vernum;i++)
+	{
+		printf("请输入第%d条边的两个节点以及权值:",i);
+		scanf("%d%d%d",&start,&end,&weight);
+		for (k=0;k<start;k++);
+		for (j=0;j<end;j++);
+		T->Arc[k-1][j-1]=weight;
+		if (T->Kind==0)
+		{
+			T->Arc[j-1][k-1]=weight;
+		}	
+	}
+	
+}
+
+
+void RELAX(G *T,int u,int v,int *D,int *pre)
+{
+	if (D[v]>D[u]+T->Arc[u][v])
+	{
+		D[v]=D[u]+T->Arc[u][v];
+		pre[v]=u;
+	}
+	
+
+}
+
+
+int BELLMAN_FORD(G *T)
+{
+	int *D,*pre,i,j,k;
+	D=(int*)malloc(T->Edegsnum*sizeof(int));
+	pre=(int*)malloc(T->Edegsnum*sizeof(int));
+	for (i=1;i<T->Edegsnum;i++)
+	{
+		D[i]=MAX;
+		pre[i]=-1;
+	}
+	D[0]=0;
+	pre[0]=-1;
+	for (k=1;k<T->Vernum;k++)
+	{
+		for (i=0;i<T->Edegsnum;i++)
+		{
+			for (j=0;j<T->Edegsnum;j++)
+			{
+				if (T->Arc[i][j]!=MAX)
+				{
+					RELAX(T,i,j,D,pre);
+				}
+			}
+		}
+	}
+	printf("从节点1到节点5的最短路径是%d\n",D[T->Edegsnum-1]);
+	i=T->Edegsnum-1;
+	while(i!=-1)
+	{
+		printf("%d->",T->Ver[i]);
+		i=pre[i];
+		
+	}
+
+	for (i=0;i<T->Edegsnum;i++)
+	{
+		for (j=0;j<T->Edegsnum;j++)
+		{
+			if (T->Arc[i][j]!=MAX)
+			{
+				if (D[j]>D[i]+T->Arc[i][j])
+				{
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+
+}
+
+
+
+
+
+void main()
+{
+	G t;
+	Initial(&t);
+	CreatG(&t);
+	Outlin(&t);
+	if(BELLMAN_FORD(&t))
+	{
+		printf("包含负权重回路");
+	}
+	else
+	{
+		printf("不包含负权重回路");
+	}
+}

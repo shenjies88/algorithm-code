@@ -1,0 +1,183 @@
+#include <iostream>
+using namespace std;
+
+typedef struct node  
+{
+	int data;
+	node *Parent;
+	node *Left;
+	node *Right;
+}Node;
+
+typedef struct{
+	Node *root;
+}Tree;
+
+
+Node *Min(Node *T)
+{
+	if (T->Left!=NULL)
+	{
+		return Min(T->Left);
+	}
+	else{
+		return T;
+	}
+}
+
+Node *After(Node *T)
+{
+	Node *Y;
+	if (T->Right)return Min(T->Right);	
+	
+
+	Y=T->Parent;
+		while(Y&&T==Y->Right)
+		{
+			T=Y;	
+			Y=Y->Parent;
+		}
+		return Y;
+	
+}
+
+void Inser(Tree *T,int key)
+{
+	if (T->root==NULL)
+	{
+		Node *s;
+		s=(Node*)malloc(sizeof(Node));
+		s->Parent=NULL;
+		s->Left=NULL;
+		s->Right=NULL;
+		s->data=key;
+		T->root=s;
+	}
+	else
+	{
+		Node *p=T->root;
+		Node *Parent=p->Parent;
+		Node *s;
+		while(p)
+		{
+			if (key<p->data)
+			{
+				Parent=p;
+				p=p->Left;
+			}
+			else
+			{
+				Parent=p;
+				p=p->Right;
+			}
+		}
+		s=(Node*)malloc(sizeof(Node));
+		
+		s->Left=NULL;
+		s->Right=NULL;
+		s->data=key;
+		
+		if (Parent->data>s->data)
+		{
+			Parent->Left=s;
+		}
+		else
+		{
+			Parent->Right=s;
+		}
+			s->Parent=Parent;
+	}
+}
+
+void Replace(Tree * T,Node *u,Node *v)
+{
+	if (!u->Parent)
+	{
+		T->root=v;
+		return;
+	}
+	else if (u==u->Parent->Left)
+	{
+		u->Parent->Left=v;
+		
+	}
+	else if (u==u->Parent->Right)
+	{
+		u->Parent->Right=v;
+	}
+	if (v!=NULL)
+	{
+		v->Parent=u->Parent;
+		
+	}
+
+	
+}
+
+void Delate(Tree *T,int key)
+{
+	Node *p=T->root;
+	Node *y=NULL;
+	while(p->data!=key)//找到要删除节点
+	{
+		if (p->data>key)
+		{
+			p=p->Left;
+		}
+		else
+		{
+			p=p->Right;
+		}
+	}
+	if (!p->Left)//只有一个孩子直接取代
+	{
+		Replace(T,p,p->Right);
+	}
+	else if (!p->Right)
+	{
+		Replace(T,p,p->Left);
+	}
+	else
+	{
+		y=After(p);
+		if (y->Parent!=p)
+		{
+			Replace(T,y,y->Right);
+			y->Right=p->Right;
+			y->Right->Parent=y;
+		}
+		Replace(T,p,y);
+		y->Left=p->Left;
+		y->Left->Parent=y;
+	}
+}
+
+void Display(Node *T)
+{
+	if (T)
+	{
+		Display(T->Left);
+		printf("%d ",T->data);
+		Display(T->Right);
+	}
+}
+
+void main()
+{
+	Tree T;
+	int n,key;
+	T.root=NULL;
+	printf("请输入要输入的元素个数:");
+	scanf("%d",&n);
+	while(n)
+	{
+		printf("请输入元素值:");
+		scanf("%d",&key);
+		Inser(&T,key);
+		n--;
+
+	}
+	Display(T.root);
+	Delate(&T,25);
+	Display(T.root);
+}

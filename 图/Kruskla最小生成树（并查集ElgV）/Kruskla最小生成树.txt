@@ -1,0 +1,141 @@
+#include <iostream>
+using namespace std;
+typedef struct  
+{
+	int Arc[20][20];
+	int *Ver;
+	int Edegenum;
+	int Vernum;
+	int Kind;
+}G;
+
+typedef struct Node
+{
+	int data;
+	int pre;
+	int aftern;
+	Node *next; 
+}Link;
+
+
+G *Initial()
+{
+	int i,j;
+	G *T;
+	T=(G*)malloc(sizeof(G));
+	printf("请输入图的类型和图的定点数和边数:");
+	scanf("%d%d%d",&T->Kind,&T->Vernum,&T->Edegenum);
+	T->Ver=(int*)malloc(T->Vernum*sizeof(int));	
+	for (i=0;i<T->Vernum;i++)
+	{
+		for (j=0;j<T->Vernum;j++)
+		{
+			T->Arc[i][j]=0;
+		}
+	}
+	for (i=0;i<T->Vernum;i++)
+	{
+		printf("请输入第%d个顶点的值",i+1);
+		scanf("%d",&T->Ver[i]);
+	}
+	return T;
+}
+
+void CreatG(G *T)
+{
+	int i,j,k,start,end,weight;
+	for (i=0;i<T->Edegenum;i++)
+	{
+		printf("请输入第%d条边的两个顶点和权重:",i+1);
+		scanf("%d%d%d",&start,&end,&weight);
+		for (j=0;j<start;j++);
+		for (k=0;k<end;k++);
+		T->Arc[j-1][k-1]=weight;
+		if (T->Kind==0)
+		{
+			T->Arc[k-1][j-1]=weight;
+		}	
+	}
+}
+
+void Inser(Link *Q,int i,int j,G *T)
+{
+	int weight=T->Arc[i][j];
+	Link *p=Q->next,*q=Q,*s;
+	if (p==NULL)
+	{
+		s=(Link*)malloc(sizeof(Link));
+		s->pre=i;
+		s->aftern=j;
+		s->data=weight;
+		s->next=NULL;
+		q->next=s;
+	}
+	else
+	{	
+		while(p&&p->data<weight)
+		{
+			p=p->next;
+			q=q->next;
+		}
+		s=(Link*)malloc(sizeof(Link));
+		s->pre=i;
+		s->aftern=j;
+		s->data=weight;
+		q->next=s;
+		s->next=p;
+	}
+
+}
+
+void Kruskal(G *T)
+{
+	int *A,i,j;
+	Link *Q,*p;
+	A=(int*)malloc(T->Vernum*sizeof(int));
+	Q=(Link*)malloc(sizeof(Q));
+	Q->next=NULL;
+
+	for (i=0;i<T->Vernum;i++)//初始化并查集
+	{
+		A[i]=i+1;
+	}
+	for (i=0;i<T->Vernum;i++)//升序排列边的权值
+	{
+		for (j=0;j<T->Vernum;j++)
+		{
+			if (T->Arc[i][j])
+			{
+				Inser(Q,i,j,T);
+			}
+		}
+	}
+	
+	p=Q->next;
+	while(p)//合并并查集
+	{
+		if (A[p->pre]!=A[p->aftern])
+		{
+			int Pre=A[p->pre];
+			int Aft=A[p->aftern];
+			printf("%d->%d ",T->Ver[p->pre],T->Ver[p->aftern]);
+			for (i=0;i<T->Vernum;i++)A[i]=(A[i]==Aft)?Pre:A[i];				
+				
+		}
+		p=p->next;
+	}
+	
+		
+
+}
+
+void main()
+{
+	G *T=Initial();
+	CreatG(T);
+	Kruskal(T);
+	getchar();
+}
+
+
+

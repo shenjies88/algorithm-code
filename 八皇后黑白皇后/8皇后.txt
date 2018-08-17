@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 8
+int Queen[N+1];
+int sum=0;
+int Chek(int len)
+{
+	int i;
+	for (i=1;i<len;i++)
+	{
+		if (abs(i-len)==abs(Queen[i]-Queen[len])||i+Queen[i]==len+Queen[len]||Queen[i]==Queen[len])
+			return 1;	
+	}
+	return 0;
+
+}
+
+
+void DSF(int n)
+{
+	if (n==N+1)
+	{
+		int i;
+		sum++;
+		for (i=1;i<=N;i++)printf("%d ",Queen[i]);
+		printf("\n");
+	}
+	else
+	{
+		int k;
+		for (k=1;k<=N;k++)
+		{
+			Queen[n]=k;
+			if (!Chek(n))
+				DSF(n+1);				
+			else 
+				continue;
+		
+		}
+	}
+}
+
+
+
+
+void main()
+{
+	DSF(1);
+	printf("%d\n",sum);
+}

@@ -1,0 +1,14 @@
+COMPACT-LIST-SEARCH(L,n,k)
+{
+	i=L
+	while(i!=NULL&&key[i]<k)
+	{
+		j=RANDOM(1,n)
+		if key[i]<key[j]&&key[j]<=k
+			i=j
+			if key[i]==k
+				return i
+	i=next[i]
+if i==NULL||key[i]>k
+	return NULL
+else return i

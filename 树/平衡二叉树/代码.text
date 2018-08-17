@@ -1,0 +1,243 @@
+#include <stdio.h>
+#include <stdlib.h>
+int num[]={50,40,45};
+typedef struct tree
+{
+	int data;
+	int bt;
+	struct tree *left,*right;
+}BST;
+BST *pre,*root,*A,*C;
+int rest=0;
+int ccc=0;
+
+
+BST *IniBST()
+{
+	BST *J;
+	J=(BST*)malloc(sizeof(BST));
+	J->data=num[0];
+	J->bt=0;
+	J->left=J->right=NULL;
+	return J;
+}
+
+BST *BalanceBST(BST *grand,BST *parent)
+{
+	BST *B;
+	if (grand->bt==-2&&parent->bt==-1)
+	{
+		C=grand;
+		B=parent;
+
+		B->left=grand;
+
+		grand->bt=0;
+		parent->bt=0;
+
+		grand->left=grand->right=NULL;
+		
+
+		return B;
+	}
+	if (grand->bt==2&&parent->bt==1)
+	{
+		C=grand;
+		B=parent;
+
+		B->right=grand;
+
+		grand->bt=0;
+		parent->bt=0;
+		grand->left=grand->right=NULL;
+
+		return B;
+	}
+	if (grand->bt==2&&parent->bt==-1)
+	{
+		C=grand;
+		B=parent->right;
+
+		B->left=parent;
+		grand->left=B;
+
+		B->right=grand;
+
+		grand->bt=0;
+		parent->bt=0;
+
+		grand->left=grand->right=NULL;
+		parent->left=parent->right=NULL;
+
+		return B;
+
+	}
+	if (grand->bt==-2&&parent->bt==1)
+	{
+		C=grand;
+		B=parent->left;
+		
+		B->right=parent;
+		grand->right=B;
+		
+		B->left=grand;
+		
+		grand->bt=0;
+		parent->bt=0;
+		
+		grand->left=grand->right=NULL;
+		parent->left=parent->right=NULL;
+		
+		return B;
+		
+	}
+}
+
+
+void InserBST(BST *T,int key,int flag)
+{
+	if (T==NULL)
+	{
+		BST *s;
+		s=(BST*)malloc(sizeof(BST));
+		s->data=key;
+		s->bt=0;
+		s->left=s->right=NULL;
+		if (flag==0)
+		{
+			pre->left=s;
+			pre->bt+=1;
+			
+		}
+		else
+		{
+			pre->right=s;
+			pre->bt-=1;
+			
+		}
+	}
+	else
+	{
+		pre=T;		
+		if (key<T->data)
+		{			
+			InserBST(T->left,key,0);
+			if (rest)
+			{
+				if (C==T->left)
+				{
+					T->left=A;
+				}
+				else if (C==T->right)
+				{
+					T->right=A;
+				}
+				rest=0;
+			}
+			if (pre->bt==0)
+			{
+				return;
+			}
+			else if (pre==root)
+			{
+				return ;
+			}
+			else if (T!=pre)
+			
+			{
+				T->bt+=1;
+			}
+			if (T->bt==2||T->bt==-2)
+			{
+				A=BalanceBST(T,T->left);
+				if (C==root)
+				{
+					ccc=1;
+				}
+				else
+				{
+					rest=1;
+				}
+				return ;
+			}
+								
+		}
+		else
+		{
+					
+			InserBST(T->right,key,1);
+		
+			if (rest)
+			{
+				if (C==T->left)
+				{
+					T->left=A;
+				}
+				else if (C==T->right)
+				{
+					T->right=A;
+				}			
+				rest=0;
+			}
+			
+			if (pre->bt==0)
+			{
+				return ;
+			}
+			else if (pre==root)
+			{
+				return ;
+			}
+			else if (T!=pre)
+			{
+				T->bt-=1;
+			}
+			if (T->bt==2||T->bt==-2)
+			{
+				A=BalanceBST(T,T->right);
+				if (C==root)
+				{
+					ccc=1;
+				}
+				else
+				{
+					rest=1;
+				}
+				return ;
+			}
+			
+		
+		}
+	
+	}
+}
+
+void play(BST *J)
+{
+	if (J)
+	{
+		play(J->left);
+		printf("%d\t",J->data);
+		play(J->right);
+	}
+}
+
+void main()
+{
+	BST *J=IniBST();
+	int i;
+	
+	
+	for (i=1;i<3;i++)
+	{
+		root=J;
+		InserBST(J,num[i],0);
+		if (ccc)
+		{
+			J=A;
+			ccc=0;
+		}
+		
+	}
+	play(J);
+}

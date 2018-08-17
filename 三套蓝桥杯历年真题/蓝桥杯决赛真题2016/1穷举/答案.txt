@@ -1,0 +1,70 @@
+
+#include <iostream>
+using namespace std;
+
+int Repet(int a,int b,int c,int d,int e,int f)
+{
+	int A[6],i,j;
+	A[0]=a;
+	A[1]=b;
+	A[2]=c;
+	A[3]=d;
+	A[4]=e;
+	A[5]=f;
+	for (i=0;i<6;i++)
+	{
+		for (j=0;j<6;j++)
+		{
+			if (i==j)
+			{
+				continue;
+			}
+			if (A[i]==A[j])
+			{
+				return 0;
+			}
+		}
+	}
+	return 1;
+
+}
+
+int Check(int a,int b,int c,int d,int e,int f)
+{
+	int m1,m2;
+	m1=a*100+b*10+c;
+	m2=a*100000+d*10000+e*1000+f*100+d*10+b;
+	if (m1*m1==m2)
+	{
+		return 1;
+	}else{
+		return 0;
+	}
+}
+void main()
+{
+	int a,b,c,d,e,f;
+	for (a=1;a<10;a++)
+	{
+		for (b=0;b<10;b++)
+		{
+			for (c=0;c<10;c++)
+			{
+				for (d=0;d<10;d++)
+				{
+					for (e=0;e<10;e++)
+					{
+						for (f=0;f<10;f++)
+						{
+						
+							if (Check(a,b,c,d,e,f)&&Repet(a,b,c,d,e,f))
+							{
+								printf("%d %d %d %d %d %d",a,b,c,d,e,f);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

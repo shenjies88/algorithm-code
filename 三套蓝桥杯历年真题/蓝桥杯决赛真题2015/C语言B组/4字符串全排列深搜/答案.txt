@@ -1,0 +1,77 @@
+#include <iostream>
+using namespace std;
+char s[1000];
+int sum=0;
+int IsSwap(char *pStar,char *pEnd)
+{
+	char *p=pStar;
+	for (;p<pEnd;p++)
+	{
+		if (*p==*pEnd)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+
+void compare(char *pStr)
+{
+	int i,j,len,k,flag;
+	char *pCh=pStr;
+	len=strlen(s);
+	for (j=0;j<=len-8;j++)
+	{
+		k=j;
+		flag=1;
+		for (i=0;i<8;i++)
+		{
+			if (s[k++]!=pStr[i])
+			{
+				flag=0;
+				break;
+			}
+			
+		}
+		if (flag)
+		{
+			sum++;
+		}
+	}
+}
+
+void Permutation(char *pStr,char *pBegin)
+{
+	if (*pBegin=='\0')
+	{
+		compare(pStr);
+	}
+	else
+	{
+		char *pCh=NULL;
+		for (pCh=pBegin;*pCh!='\0';pCh++)
+		{
+			if (IsSwap(pBegin,pCh))
+			{
+				swap(*pCh,*pBegin);
+				Permutation(pStr,pBegin+1);
+				swap(*pBegin,*pCh);
+			}
+		}
+	}
+}
+void main()
+{
+	int n,i;
+	char str[9];
+	scanf("%s",s);
+	scanf("%d",&n);
+	for (i=0;i<n;i++)
+	{
+		scanf("%s",str);
+		Permutation(str,str);
+	}
+	printf("%d",sum);
+
+}

@@ -1,0 +1,115 @@
+#include <iostream>
+using namespace std;
+#define USE -1
+#define NO -2
+#define MAX 999
+typedef struct  
+{
+	int Arc[20][20];
+	int *Ver;
+	int Edegenum;
+	int Vernum;
+	int Kind;
+}G;
+
+
+
+G *Initial()
+{
+	int i,j;
+	G *T;
+	T=(G*)malloc(sizeof(G));
+	printf("请输入图的类型和图的定点数和边数:");
+	scanf("%d%d%d",&T->Kind,&T->Vernum,&T->Edegenum);
+	T->Ver=(int*)malloc(T->Vernum*sizeof(int));	
+	for (i=0;i<T->Vernum;i++)
+	{
+		for (j=0;j<T->Vernum;j++)
+		{
+			T->Arc[i][j]=MAX;
+		}
+	}
+	for (i=0;i<T->Vernum;i++)
+	{
+		printf("请输入第%d个顶点的值",i+1);
+		scanf("%d",&T->Ver[i]);
+	}
+	return T;
+}
+
+void CreatG(G *T)
+{
+	int i,j,k,start,end,weight;
+	for (i=0;i<T->Edegenum;i++)
+	{
+		printf("请输入第%d条边的两个顶点和权重:",i+1);
+		scanf("%d%d%d",&start,&end,&weight);
+		for (j=0;j<start;j++);
+		for (k=0;k<end;k++);
+		T->Arc[j-1][k-1]=weight;
+		if (T->Kind==0)
+		{
+			T->Arc[k-1][j-1]=weight;
+		}	
+	}
+}
+
+void Prim(G *T)
+{
+	int *Isuse;
+	int *weight;
+	int i,j,k,min;
+	Isuse=(int*)malloc(sizeof(int));
+	weight=(int*)malloc(sizeof(int));
+	for (i=1;i<T->Vernum;i++)//选出离初始点有连接的边
+	{
+		weight[i]=T->Arc[0][i];
+		if (T->Arc[0][i]!=MAX)
+		{
+			
+			Isuse[i]=0;
+		}
+		else{
+		
+			Isuse[i]=NO;
+		}
+	}
+	Isuse[0]=USE;
+	weight[0]=MAX;
+	for (i=1;i<T->Vernum;i++)
+	{
+		min=MAX;
+		for (j=1;j<T->Vernum;j++)
+		{
+			if (Isuse[j]>=0&&weight[j]<min)
+			{
+				k=j;
+				min=weight[j];
+			}
+		}
+	
+	
+		printf(" %d->%d",Isuse[k]+1,T->Ver[k]);
+		Isuse[k]=USE;
+		weight[k]=MAX;
+		for (j=0;j<T->Vernum;j++)
+		{
+			if (T->Arc[k][j]<weight[j]&&Isuse[j]!=USE)
+			{
+				weight[j]=T->Arc[k][j];
+				Isuse[j]=T->Ver[k]-1;
+			}
+		}
+	}
+}
+
+
+void main()
+{
+	G *T=Initial();
+	CreatG(T);
+	Prim(T);
+}
+
+
+

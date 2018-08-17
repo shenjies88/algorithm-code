@@ -1,0 +1,72 @@
+#include <stdio.h>
+int fenzhi(int B[],int low,int mid,int hight)
+{
+	int i,j,sum,left_sum,right_sum;
+
+	left_sum=-9999;
+	sum=0;
+
+	for (i=mid;i>=low;i--)
+	{
+		sum=sum+B[i];
+		if (sum>left_sum)
+		{
+			left_sum=sum;
+			
+		}
+	}
+
+	right_sum=-999;
+	sum=0;
+
+	for (j=mid+1;j<=hight;j++)
+	{
+		sum=sum+B[j];
+		if (sum>right_sum)
+		{
+			right_sum=sum;
+			
+		}
+
+	}
+	
+	return(left_sum+right_sum);
+	
+}
+
+int Find_Maximum_Subarray(int B[],int low,int hight)
+{
+	if (hight==low)
+	{
+		return B[low];
+	}
+	else
+	{
+		int mid=(low+hight)/2;
+		int right_sum=Find_Maximum_Subarray(B,mid+1,hight);
+		int left_sum=Find_Maximum_Subarray(B,low,mid);
+		int crosssum=fenzhi(B,low,mid,hight);
+
+		if (left_sum>=right_sum&&left_sum>=crosssum)
+		{
+			return left_sum;
+		}
+		else if (right_sum>=left_sum&&right_sum>=crosssum)
+		{
+			return right_sum;
+		}
+		else
+		{
+			return crosssum;
+		}
+	}
+}
+
+
+
+void main()
+{
+	int A[]={-21,21,54,-77,20,56,-87,15};
+	int x=Find_Maximum_Subarray(A,0,7);
+	printf("%d",x);	
+}

@@ -1,0 +1,34 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+
+void main()
+{
+	int a,b,k,temp;
+	
+	while(1)
+	{
+
+	
+	scanf("%d%d",&a,&b);
+	if(a>b)
+	{
+		a=a+b;
+		a=a-b;
+		b=a-b;
+	}
+	k=b-a;
+	temp=k*((1+sqrt(5))/2.00);
+	if (a==temp)
+	{
+		printf("NO\n");
+	}
+	else
+		printf("Yes\n");
+	}
+}
+
+
+¹«Ê½  k=bi-ai;
+	if ai=k*(1+sqrt(5))/2

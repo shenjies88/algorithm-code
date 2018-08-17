@@ -1,0 +1,18 @@
+给你n*m表格，初始在右上角，每次在上个人移动后的基础上移动一步（向左or向下or向左下）
+先到左下角则获胜。
+Kiki这个孩纸先走，ZZ后走。
+问Kiki是否能赢！
+
+
+
+#include <stdio.h>  
+int main()  
+{  
+    int m,n;  
+    while( scanf("%d%d",&n,&m) && n && m )  
+    {  
+        if( n&1 && m&1 )    printf("What a pity!\n");  
+        else    printf("Wonderful!\n");  
+    }  
+    return 0;  
+}

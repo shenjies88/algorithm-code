@@ -1,0 +1,49 @@
+#include <iostream>
+int A[]={8,4,7,1,2,5,9,10};
+int sum=0;
+
+void MegerSort(int l,int mid,int r)
+{
+	int *B,i,j,k;
+	k=l;
+	i=l;
+	j=mid+1;
+	B=(int*)malloc((r-l+1)*sizeof(int));
+	while(i<=mid&&j<=r)
+	{
+		if (A[j]>A[i])
+		{
+			
+			B[k++]=A[i++];
+		}
+		else
+		{
+			B[k++]=A[j++];
+			sum+=mid-i+1;
+		}
+	}
+	while(i<=mid)B[k++]=A[i++];
+	while(j<=r)B[k++]=A[j++];
+	for (i=l;i<=r;i++)
+	{
+		A[i]=B[i];
+	}
+}
+
+
+void Parttion(int l,int r)
+{
+	int mid;
+	if (l<r)
+	{
+		mid=(l+r)/2;
+		Parttion(l,mid);
+		Parttion(mid+1,r);
+		MegerSort(l,mid,r);
+	}
+}
+
+void main()
+{
+	Parttion(0,7);
+}

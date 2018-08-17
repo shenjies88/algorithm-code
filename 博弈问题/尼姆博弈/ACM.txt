@@ -1,0 +1,50 @@
+这道题有些不一样，如果John吃的是某个盒子最后一颗，那就判定John为败。
+所以，这道题分为两种情况讨论：
+①若所有堆的数量都为1。则根据奇偶来判断谁胜。
+②其他情况，将所有数据异或起来，判断是否为奇异态。
+
+Sample Input
+2
+3
+3 5 1
+1
+1
+ 
+Sample Output
+John
+Brother
+
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int arr[48];
+
+
+int main()
+{
+	int t,n,temp;
+	scanf("%d",&t);
+	while(t--)
+	{
+		scanf("%d",&n);
+		for (int i=0;i<n;i++)scanf("%d",&arr[i]);
+		sort(arr,arr+n);
+		if(arr[n-1]==1)
+		{			
+			if(n&1)printf("NO\n");
+				else printf("YES\n");
+				continue;
+		}
+		temp=arr[0]^arr[1];
+		for (i=2;i<n;i++)
+		{
+			temp^=arr[i];
+		}
+		if(temp==0)printf("NO\n");
+			else printf("YES\n");
+
+	}
+	return 0;
+}

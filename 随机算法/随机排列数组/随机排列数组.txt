@@ -1,0 +1,22 @@
+RAND(A[])
+{
+	n=A.lengh
+	for i=0 to n-1
+	 swap A[i] =A[Rand(i,n)]	
+}
+
+
+RAND(A[])
+{
+	n=A.lengh
+	let [0..n-1] P be a new array
+	for i=0 to n-1
+	P[i]=Rand(1,n3次方);
+	sort A ,using P as sort key
+}
+
+
+
+ n<=r<=m;
+
+rand()%(m-n+1)+n 取n~m范围的数

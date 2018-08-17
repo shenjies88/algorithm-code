@@ -1,0 +1,27 @@
+#include <iostream>
+#include <cstring>
+#include <cmath>
+using namespace std;
+
+
+
+int main()
+{
+	int n=pow(111,3);
+	for (int i=1;i<n/2;i=i+2)
+	{
+		int sum=i;
+		int temp=i;
+		while(sum<n)
+		{
+			temp+=2;
+			sum+=temp;
+		}
+		if (sum==n)
+		{
+			cout<<i<<endl;
+			break;
+		}
+	}
+	return 0;
+}

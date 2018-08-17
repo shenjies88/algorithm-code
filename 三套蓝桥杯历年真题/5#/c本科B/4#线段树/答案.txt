@@ -1,0 +1,96 @@
+#include <iostream>
+using namespace std;
+#define MAX 100
+#define max 25
+struct  STU 
+{
+	int left;
+	int right;
+	int value;
+}stree[MAX];
+int sum=0;
+int lift[max];
+
+
+
+void BuidTree(int index,int left,int right)
+{
+	stree[index].left=left;
+	stree[index].right=right;
+	stree[index].value=0;
+	if(left==right)
+	{
+		lift[left]=index;
+		return;
+	}
+	BuidTree(index*2,left,(left+right)/2);
+	BuidTree(index*2+1,(left+right)/2+1,right);
+}
+
+void Updata(int index)
+{
+	if(index==1)return;
+	int parent=index/2;
+	int a=stree[parent*2].value;
+	int b=stree[parent*2+1].value;
+	stree[parent].value=a+b;
+	Updata(parent);
+}
+
+void Check(int index,int left,int right)
+{
+	int child=index*2;
+	if(stree[index].left==left&&stree[index].right==right)
+	{
+		sum+=stree[index].value;
+		return;
+	}
+	if (stree[child].right>=left)
+	{
+		if (stree[child].right>=right)
+		{
+			Check(child,left,right);
+		}
+		else
+		{
+			Check(child,left,stree[child].right);
+		}
+	}
+	child+=1;
+	if (stree[child].left<=right)
+	{
+		if (stree[child].left<=left)
+		{
+			Check(child,left,right);
+		}
+		else
+		{
+			Check(child,stree[child].left,right);
+		}
+	}
+}
+
+void main()
+{
+	int region,l,r;
+	while(scanf("%d%d%d",&region,&l,&r)!=EOF&&(region||l||r))
+	{
+		sum=0;
+		memset(stree,0,sizeof(stree));
+		memset(lift,0,sizeof(lift));
+	BuidTree(1,1,region);
+	for (int i=2;i<=region;i++)
+	{
+		for (int j=i;j<=region;j++)
+		{
+			if (j%i==0)
+			{
+				stree[lift[j]].value=(stree[lift[j]].value==1)?0:1;
+				Updata(lift[j]);
+			}
+		}
+	}
+		Check(1,l,r);
+		printf("%d\n",sum);
+	}
+}

@@ -1,0 +1,46 @@
+#include <iostream>
+using namespace std;
+
+
+int IsSwap(char *start,char *end)
+{
+	
+	for (char *p=start;p<end;p++)
+	{
+		if (*p==*end)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+
+
+void PatitionSort(char *Str,char *pBegin)
+{
+	if (*pBegin=='\0')
+	{
+		printf("%s\n",Str);
+	}
+	else
+	{
+		for(char *pCH=pBegin;*pCH!='\0';pCH++)
+		{
+			if(IsSwap(pBegin,pCH))
+			{
+				swap(*pBegin,*pCH);
+				PatitionSort(Str,pBegin+1);
+				swap(*pCH,*pBegin);
+			}
+		}
+	}
+
+}
+
+
+void main()
+{
+	char str[]="aab";
+	PatitionSort(str,str);
+}

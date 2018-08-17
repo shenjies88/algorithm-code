@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 7
+int **m;
+int **s;
+
+void DP(int *p)
+{
+	int i,j,k,l,temp;
+	int n=N-1;
+	m=(int**)malloc((n+1)*sizeof(int*));
+	s=(int**)malloc((n+1)*sizeof(int*));
+
+	for (i=0;i<=n;i++)m[i]=(int*)malloc((n+1)*sizeof(int));
+	for (i=0;i<=n;i++)s[i]=(int*)malloc((n+1)*sizeof(int));
+	for (i=1;i<=n;i++)m[i][i]=0;
+
+	for (l=2;l<=n;l++)
+	{
+		for (i=1;i<=n-l+1;i++)
+		{
+			j=i+l-1;
+			m[i][j]=999999;
+			for (k=i;k<j;k++)
+			{
+				temp=m[i][k]+m[k+1][j]+p[i-1]*p[k]*p[j];
+				if (temp<m[i][j])
+				{
+					m[i][j]=temp;
+					s[i][j]=k;
+				}
+			}
+		}
+	}
+
+
+}
+
+void Patition(int i,int j)  
+{  
+	if (i==j)
+	{
+		printf("A%d",i);
+	}
+	else
+	{
+		printf("(");
+		Patition(i,s[i][j]);
+		Patition(s[i][j]+1,j);
+		printf(")");
+	}
+
+
+}
+
+void main()
+{
+	int p[]={30,35,15,5,10,20,25};
+	DP(p);
+	Patition(1,N-1);
+}

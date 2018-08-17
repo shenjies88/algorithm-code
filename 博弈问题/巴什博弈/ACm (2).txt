@@ -1,0 +1,26 @@
+过打听，Lele知道这场拍卖的规则是这样的：刚开始底价为0，两个人轮流开始加价，不过每次加价的幅度要在1～N之间，当价格大于或等于田地的成本价 M 时，主办方就把这块田地卖给这次叫价的人。
+
+Lele和Yueyue虽然考试不行，但是对拍卖却十分精通，而且他们两个人都十分想得到这块田地。所以他们每次都是选对自己最有利的方式进行加价。
+
+由于Lele字典序比Yueyue靠前，所以每次都是由Lele先开始加价，请问，第一次加价的时候，
+Lele要出多少才能保证自己买得到这块地呢？
+
+
+#include <stdio.h>  
+int main()  
+{  
+    int i,m,n;  
+    while( scanf("%d%d",&m,&n)!=EOF )  
+    {  
+        if( m%(n+1)==0 )  printf("none\n");  
+        else if( m>n )  printf("%d\n",m%(n+1));  //m=k*(n+1)+s
+						//去掉s即m%(n+1)
+        else  
+        {  
+            for(i=m;i<n;++i)  
+                printf("%d ",i);  
+            printf("%d\n",n);  
+        }  
+    }  
+    return 0;  
+}  

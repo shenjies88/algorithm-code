@@ -1,0 +1,94 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+char S[1024*1024+10];
+char temp[1000+10][8+10];
+int next[8+10];
+int sum=0;
+
+void Next(char *p)
+{
+	int i,j;
+	next[0]=-1;
+	for (i=1;i<8;i++)
+	{
+		j=next[i-1];
+		while(j>=0&&p[j+1]!=p[i])j=next[j];
+		next[i]=(p[j+1]==p[i])?j+1:-1;
+	}
+}
+
+int Cmp(char *p)
+{
+	int si,sl,pi,pl;
+	sl=strlen(S);
+	pl=strlen(p);
+	si=pi=0;
+	while(si<sl)
+	{
+		if (S[si]==p[pi])
+		{
+			si++;
+			pi++;
+		}
+		else
+		{
+			if (pi==0)si++;
+			else pi=next[pi-1]+1;
+		}
+		if (pi==pl)return 1;
+	}
+	return 0;
+}
+
+int ISswap(char *begin,char *end)
+{
+	for (char *p=begin;p<end;p++)
+	{
+		if(*p==*end)return 0;
+	}
+	return 1;
+}
+
+
+void Patition(char *str,char *begin)
+{
+	if (*begin=='\0')
+	{
+		memset(next,0,sizeof(next));
+		Next(str);
+		if (Cmp(str))
+		{
+			sum++;
+		}
+	}
+	else
+	{
+		for (char *p=begin;*p!='\0';p++)
+		{
+			if (ISswap(begin,p))
+			{
+				swap(*begin,*p);
+				Patition(str,begin+1);
+				swap(*begin,*p);
+			}
+		}
+	}
+}
+
+
+int main()
+{
+	int n,i;
+	gets(S);	
+	cin>>n;
+	getchar();
+	for (i=0;i<n;i++)
+	{
+		
+		gets(temp[i]);
+		Patition(temp[i],temp[i]);
+
+	}
+	return 0;
+}

@@ -1,0 +1,377 @@
+#include <iostream>
+using namespace std;
+#define black 1
+#define red 2
+typedef struct node
+{
+	int color;
+	int key;
+	node *left;
+	node *right;
+	node *parent;
+}Node;
+
+typedef struct  
+{
+	Node *root;
+	Node *mil;
+}Tree;
+
+
+Node *Initial()
+{
+	Node *root;
+	root=(Node*)malloc(sizeof(Node));
+	return root;
+}
+
+Node *Treemin(Tree *T,Node *p)//查找左边
+{
+	while(p->left!=T->mil)
+	{
+		p=p->left;
+	}
+	return p;
+}
+
+Node *Treeafter(Tree *T,Node *p)//查找后继
+{
+	Node *y;
+	if (p->right!=T->mil)
+	{
+		return Treemin(T,p->right);
+	}
+	else
+	{
+		y=p->parent;
+		while(y!=T->mil&&p==y->right)
+		{
+			p=y;
+			y=y->parent;
+		}
+		return y;
+	}
+}
+
+void Right_Rotate(Tree *T,Node *s)//右旋
+{
+	Node *y=s->right;
+	s->right=y->left;
+	if (y->left!=T->mil)
+	{
+		y->left->parent=s;
+	}
+	y->parent=s->parent;
+	if (s==T->root)
+	{
+		T->root=y;
+	}
+	else if(s==s->parent->right)
+	{
+		s->parent->right=y;
+	}
+	else
+	{
+		s->parent->left=y;
+	}
+	y->left=s;
+	s->parent=y;
+
+
+}
+
+void Left_Rotate(Tree *T,Node *s)//左旋
+{
+	Node *y=s->left;
+	s->left=y->right;
+	if (y->right!=T->mil)
+	{
+		y->right->parent=s;
+	}
+	y->parent=s->parent;
+	if (s==T->root)
+	{
+		T->root=y;
+	}
+	else if(s==s->parent->right)
+	{
+		s->parent->right=y;
+	}
+	else
+	{
+		s->parent->left=y;
+	}
+	y->right=s;
+	s->parent=y;
+
+}
+
+void RB_Adajct(Tree *T,Node *s)
+{
+	Node *y;
+	while(s->parent->color==red)
+	{
+		if (s->parent==s->parent->parent->left)
+		{
+			y=s->parent->parent->right;
+			if (y->color==red)
+			{
+				s->parent->color=black;
+				y->color=black;
+				s->parent->parent->color=red;
+				s=s->parent->parent;
+			}
+		
+			else 
+			{
+				if(s==s->parent->right)
+				{
+					s=s->parent;
+					Right_Rotate(T,s);
+				}
+				s->parent->color=black;
+				s->parent->parent->color=red;
+				Left_Rotate(T,s->parent->parent);
+			}
+
+		}
+
+		else//下面else分支类似于上面,注意到else分支的情况2和情况3所做旋转正好是if分支情况的逆。  
+		{  
+			y=s->parent->parent->left;  
+			if (y->color==red)  
+			{  
+				s->parent->color=black;  
+				y->color=black;  
+				s->parent->parent->color=red;  
+				s=s->parent->parent;  
+			}   
+			else   
+			{  
+				if (s==s->parent->left)  
+				{  
+					s=s->parent;  
+					Left_Rotate(T,s);  
+				}   
+				s->parent->color=black;  
+				s->parent->parent->color=red;  
+				Right_Rotate(T,s->parent->parent);  
+			} 
+			
+		}//else  
+     
+		
+	}//while
+
+	T->root->color=black;
+}
+
+void RB_Inser(Tree *T,int key)//插入到合适位置
+{
+	Node *x,*y,*s;
+	y=T->mil;
+	x=T->root;
+	while(x!=T->mil)
+	{
+		y=x;
+		if (key<x->key)
+		{
+			x=x->left;
+		}
+		else
+		{
+			x=x->right;
+		}
+	}
+	s=Initial();
+	s->key=key;
+	s->parent=y;
+	if (y==T->mil)
+	{
+		T->root=s;
+	}
+	else if (s->key<y->key)
+	{
+		y->left=s;
+	}
+	else 
+	{
+		y->right=s;
+	}
+	s->left=T->mil;
+	s->right=T->mil;
+	s->color=red;
+	RB_Adajct(T,s);//调整
+	
+
+}
+
+void RB_Transplant(Tree *T,Node *u,Node *V)
+{
+	if (u->parent==T->mil)
+	{
+		T->root=V;
+	}
+	else if (u==u->parent->left)
+	{
+		u->parent->left=V;
+	}
+	else
+	{
+		u->parent->right=V;
+	}
+	V->parent=u->parent;
+}
+
+void RB_Delete_Fixup(Tree *T,Node *x)
+{
+	Node *w;
+	while(x!=T->root&&x->color==black)
+	{
+		if (x==x->parent->left)
+		{
+			w=x->parent->right;
+			if (w->color==red)
+			{
+				w->color=black;
+				x->parent->color=red;
+				Right_Rotate(T,x->parent);
+				w=x->parent->right;
+			}
+			if (w->left->color==black&&w->right->color==black)
+			{
+				w->color=red;
+				x=x->parent;
+			}
+			else
+			{
+				if (w->right->color==black)
+				{
+					w->left->color=black;
+					w->color=red;
+					Left_Rotate(T,w);
+					w=x->parent->right;
+				}
+				w->color=x->parent->color;
+				x->parent->color=black;
+				w->right->color=black;
+				Right_Rotate(T,x->parent);
+				x=T->root;
+			}
+		}
+		else
+		{
+			w=x->parent->left;
+			if (w->color==red)
+			{
+				w->color=black;
+				x->parent->color=red;
+				Right_Rotate(T,x->parent);
+				w=x->parent->left;
+			}
+			if (w->right->color==black&&w->left->color==black)
+			{
+				w->color=red;
+				x=x->parent;
+			}
+			else
+			{
+				if (w->left->color==black)
+				{
+					w->right->color=black;
+					w->color=red;
+					Right_Rotate(T,w);
+					w=x->parent->left;
+				}
+				w->color=x->parent->color;
+				x->parent->color=black;
+				w->left->color=black;
+				Left_Rotate(T,x->parent);
+				x=T->root;
+			}
+		}
+
+	}
+	x->color=black;
+
+}
+
+void RB_Delete(Tree *T,int key)
+{
+	int coloc;
+	Node *p=T->root,*s=T->root->parent,*x,*y;
+	while(p!=T->mil)//查找相应节点
+	{
+		s=p;
+		if (p->key==key)
+		{
+			break;
+		}
+		if (key<p->key)
+		{
+			p=p->left;
+		}
+		else
+		{
+			p=p->right;
+		}
+	}
+	coloc=s->color;
+	if (s->left==T->mil)
+	{
+		x=s->right;
+		RB_Transplant(T,s,s->right);
+	} else if (s->right==T->mil)
+	{
+		x=s->left;
+		RB_Transplant(T,s,s->left);
+	}
+	else
+	{
+		y=Treeafter(T,s);//查找后继
+		coloc=y->color;
+		x=y->right;
+		if (y->parent==s)
+		{
+			x->parent=y;
+		}else{
+			RB_Transplant(T,y,y->right);
+			y->right=s->right;
+			y->right->parent=y;
+		}
+		RB_Transplant(T,s,y);
+		y->left=s->left;
+		y->left->parent=y;
+		y->color=s->color;
+	}
+	if (coloc==black)
+	{
+		RB_Delete_Fixup(T,x);
+	}
+
+}
+
+
+
+void main()
+{
+	int n,i,A[10];
+	Tree *T;
+	printf("请输入元素个数:");
+	scanf("%d",&n);
+	T=(Tree*)malloc(sizeof(Tree));
+	T->mil=(Node*)malloc(sizeof(Node));
+	T->root=T->mil;
+	for (i=0;i<n;i++)
+	{
+		printf("请输入第%d个元素值:",i+1);
+		scanf("%d",&A[i]);	
+	}
+	for (i=0;i<n;i++)
+	{
+		RB_Inser(T,A[i]);
+	}
+
+	RB_Delete(T,38);
+	
+}

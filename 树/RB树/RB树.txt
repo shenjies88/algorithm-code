@@ -1,0 +1,218 @@
+#include <iostream>
+using namespace std;
+#define black 1
+#define red 2
+typedef struct node
+{
+	int color;
+	int key;
+	node *left;
+	node *right;
+	node *parent;
+}Node;
+
+typedef struct  
+{
+	Node *root;
+	Node *mil;
+}Tree;
+
+
+Node *Initial()
+{
+	Node *root;
+	root=(Node*)malloc(sizeof(Node));
+	return root;
+}
+
+void Right_Rotate(Tree *T,Node *s)//右旋
+{
+	Node *y=s->right;
+	s->right=y->left;
+	if (y->left!=T->mil)
+	{
+		y->left->parent=s;
+	}
+	y->parent=s->parent;
+	if (s==T->root)
+	{
+		T->root=y;
+	}
+	else if(s==s->parent->right)
+	{
+		s->parent->right=y;
+	}
+	else
+	{
+		s->parent->left=y;
+	}
+	y->left=s;
+	s->parent=y;
+
+
+}
+
+void Left_Rotate(Tree *T,Node *s)//左旋
+{
+	Node *y=s->left;
+	s->left=y->right;
+	if (y->right!=T->mil)
+	{
+		y->right->parent=s;
+	}
+	y->parent=s->parent;
+	if (s==T->root)
+	{
+		T->root=y;
+	}
+	else if(s==s->parent->right)
+	{
+		s->parent->right=y;
+	}
+	else
+	{
+		s->parent->left=y;
+	}
+	y->right=s;
+	s->parent=y;
+
+}
+
+void RB_Adajct(Tree *T,Node *s)
+{
+	Node *y;
+	while(s->parent->color==red)
+	{
+		if (s->parent==s->parent->parent->left)
+		{
+			y=s->parent->parent->right;
+			if (y->color==red)
+			{
+				s->parent->color=black;
+				y->color=black;
+				s->parent->parent->color=red;
+				s=s->parent->parent;
+			}
+		
+			else 
+			{
+				if(s==s->parent->right)
+				{
+					s=s->parent;
+					Right_Rotate(T,s);
+				}
+				s->parent->color=black;
+				s->parent->parent->color=red;
+				Left_Rotate(T,s->parent->parent);
+			}
+
+		}
+
+		else//下面else分支类似于上面,注意到else分支的情况2和情况3所做旋转正好是if分支情况的逆。  
+		{  
+			y=s->parent->parent->left;  
+			if (y->color==red)  
+			{  
+				s->parent->color=black;  
+				y->color=black;  
+				s->parent->parent->color=red;  
+				s=s->parent->parent;  
+			}   
+			else   
+			{  
+				if (s==s->parent->left)  
+				{  
+					s=s->parent;  
+					Left_Rotate(T,s);  
+				}   
+				s->parent->color=black;  
+				s->parent->parent->color=red;  
+				Right_Rotate(T,s->parent->parent);  
+			} 
+			
+		}//else  
+     
+		
+	}//while
+
+	T->root->color=black;
+}
+
+void RB_Inser(Tree *T,int key)//插入到合适位置
+{
+	Node *x,*y,*s;
+	y=T->mil;
+	x=T->root;
+	while(x!=T->mil)
+	{
+		y=x;
+		if (key<x->key)
+		{
+			x=x->left;
+		}
+		else
+		{
+			x=x->right;
+		}
+	}
+	s=Initial();
+	s->key=key;
+	s->parent=y;
+	if (y==T->mil)
+	{
+		T->root=s;
+	}
+	else if (s->key<y->key)
+	{
+		y->left=s;
+	}
+	else 
+	{
+		y->right=s;
+	}
+	s->left=T->mil;
+	s->right=T->mil;
+	s->color=red;
+	RB_Adajct(T,s);//调整
+	
+
+}
+
+void Display(Tree *T,Node *p)
+{	
+	if (p!=T->mil)
+	{
+		Display(T,p->left);
+		if (p->color==red)
+		{
+			printf("节点值为%d颜色为红色:\n",p->key);
+		}
+		else
+		{
+			printf("节点值为%d颜色为黑色:\n",p->key);
+		}
+		Display(T,p->right);
+	}
+}
+
+void main()
+{
+	int n,i,A[10];
+	Tree *T;
+	printf("请输入元素个数:");
+	scanf("%d",&n);
+	T=(Tree*)malloc(sizeof(Tree));
+	T->mil=(Node*)malloc(sizeof(Node));
+	T->root=T->mil;
+	for (i=0;i<n;i++)
+	{
+		printf("请输入第%d个元素值:",i+1);
+		scanf("%d",&A[i]);	
+	}
+	for (i=0;i<n;i++)
+	{
+		RB_Inser(T,A[i]);
+	}
+	getchar();
+	Display(T,T->root);
+}

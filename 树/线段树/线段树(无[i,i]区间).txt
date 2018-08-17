@@ -1,0 +1,75 @@
+#include <iostream>
+using namespace std;
+#define N 40
+typedef struct
+{
+	int cover;
+}Node;
+Node A[N];
+int Flag[N];
+
+void Inser(int index,int l,int r,int a,int b,int c)
+{
+	if (A[index].cover!=c)
+	{
+		int m=(l+r)/2;
+		if (l==a&&r==b)
+		{
+			A[index].cover=c;
+			return;
+		}
+		else {
+			if (A[index].cover>=0)
+			{
+				A[index*2].cover=A[index].cover;
+				A[index*2+1].cover=A[index].cover;
+				A[index].cover=-1;
+			}
+		}
+		if (b<=m)
+		{
+			Inser(index*2,l,m,a,b,c);
+		}
+		else if (a>=m)
+		{
+			Inser(index*2+1,m,r,a,b,c);
+		}
+		else
+		{
+			Inser(index*2,l,m,a,m,c);
+			Inser(index*2+1,m,r,m,b,c);
+		}
+	}
+
+}
+
+void Count(int index,int l,int r)
+{
+	if (A[index].cover>=0)
+	{
+		Flag[A[index].cover]=1;
+	}
+	else
+	{
+		Count(index*2,l,(l+r)/2);
+		Count(index*2+1,(l+r)/2,r);
+	}
+}
+
+
+
+int main()
+{
+	for (int i=1;i<=4;i++)
+	{
+		int start,end;
+		cin>>start>>end;
+		Inser(1,1,9,start,end,i);
+	}
+	Count(1,1,9);
+	int sum=0;
+	for( i=0;i<N;i++){if(Flag[i]>0)sum++;}
+	cout<<sum<<endl;
+	
+	return 0;
+}

@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define N 7
+
+int QuShu(int key,int d)
+{
+	int i,b,a=key;
+	for (i=0;i<d;i++)
+	{
+		b=a%10;
+		a=a/10;
+	}
+	return b;
+
+}
+void Count_Sort(int A[],int k,int d)
+{
+	int *C,*B,i,j;
+	C=(int*)malloc(k+1*sizeof(int));
+	B=(int*)malloc(N*sizeof(int));
+	for (i=0;i<N;i++)
+	{
+		B[i]=A[i];
+	}
+	for (i=0;i<=k;i++)
+	{
+		C[i]=0;
+	}
+	for (j=0;j<N;j++)
+	{
+		C[QuShu(A[j],d)]+=1;
+	}
+	for (i=1;i<=k;i++)
+	{
+		C[i]+=C[i-1];
+	}
+	for (j=N-1;j>=0;j--)
+	{
+		A[C[QuShu(B[j],d)]-1]=B[j];
+		C[QuShu(B[j],d)]-=1;
+	}
+
+}
+
+
+
+void main()
+{
+	int A[]={329,457,657,839,436,720,355};
+
+	int i;
+	for (i=1;i<=3;i++)
+	{
+		Count_Sort(A,9,i);
+	}
+	for (i=0;i<N;i++)
+	{
+		printf("%d ",A[i]);
+	}
+}
+
+

@@ -1,0 +1,169 @@
+#include <iostream>
+#include <functional>
+#include <queue>
+#include <math.h>
+using namespace std;
+#define PI 3.14
+
+typedef struct node 
+{
+	int x;
+	int y;
+	double angle;
+	friend bool operator< (node n1,node n2)
+	{
+		return n1.angle>n2.angle;
+	}
+}Node;
+
+typedef struct  
+{
+	Node data[100];
+	int base;
+	int top;
+}Stack;
+
+void Push(Stack *S,Node a)
+{
+	S->data[S->top++]=a;
+}
+
+void Pop(Stack *S)
+{
+	S->top--;
+}
+
+Node getTop(Stack S)
+{
+	return S.data[S.top-1];
+}
+
+Node nextTop(Stack S)
+{
+	return S.data[S.top-2];
+}
+
+Node node[100];
+
+double Angle(Node a,Node b)
+{
+	int x=a.x-b.x;
+	int y=a.y-b.y;
+	double p=sqrt((x*x)+(y*y));
+	double cos=x/p;
+	double AAA=((acos(cos)*180)/PI);
+	return AAA;
+}
+
+int Corss(Node a,Node b,Node c)//c原点b标准点a比较点
+{
+	return (a.x-c.x)*(b.y-c.y)-(b.x-c.x)*(a.y-c.y);
+
+}
+ 
+void G(int len)
+{
+	int min=9999,k;
+	Stack S;
+	priority_queue<Node> Q;
+	S.base=S.top=0;
+	Node fist,second;
+	
+	for (int i=0;i<len;i++)//搜索最左下端点
+	{
+		if (node[i].y==min)
+		{
+			if (node[i].x<node[k].x)
+			{
+				k=i;
+				continue;
+			}
+			continue;
+		}
+		if (node[i].y<min)
+		{
+			min=node[i].y;
+			k=i;
+		}
+	}
+
+	for (i=0;i<len;i++)//计算各个点和最低点的角度，按照升序出栈
+	{
+		if(i==k)continue;
+		node[i].angle=Angle(node[i],node[k]);
+		Q.push(node[i]);
+	}
+	Push(&S,node[k]);//先把前三个入栈
+	Push(&S,Q.top()),Q.pop();
+	Push(&S,Q.top()),Q.pop();
+
+	while(!Q.empty()&&S.base!=S.top)
+	{
+		while(1)
+		{
+			fist=getTop(S);
+			second=nextTop(S);
+			while(fist.angle==second.angle)
+			{
+				int X=fist.x-node[k].x;
+				int Y=fist.y-node[k].y;
+				double sum1,sum2;
+				sum1=sqrt((X*X)-(Y*Y));
+				 X=second.x-node[k].x;
+				 Y=second.y-node[k].y;
+				 sum2=sqrt((X*X)-(Y*Y));
+				if (sum2>sum1)
+				{
+					Pop(&S);
+					fist=getTop(S);
+					second=nextTop(S);
+				}
+				else
+				{
+					Node temp;
+					temp=S.data[S.top-1];
+					S.data[S.top-1]=S.data[S.top-2];
+					S.data[S.top-2]=temp;
+					Pop(&S);
+					fist=getTop(S);
+					second=nextTop(S);
+				}
+			}
+			if (Corss(Q.top(),fist,second)<=0)
+			{
+				Push(&S,Q.top());
+				Q.pop();
+				break;
+			}
+			else
+			{
+				Pop(&S);
+			}
+		}
+		
+	}
+	while(S.base!=S.top)//输出
+	{
+		Node temp;
+		temp=getTop(S);
+		cout<<"("<<temp.x<<","<<temp.y<<")"<<endl;
+		S.top--;
+	}
+
+}
+
+
+void main()
+{
+	int n;
+	cout<<"请输入要输入的元素个数";
+	cin>>n;
+	for (int i=0;i<n;i++)
+	{
+		cout<<"请输入第"<<i+1<<"个元素的X值和Y值";
+		cin>>node[i].x>>node[i].y;
+	}
+	G(n);
+}
+
+

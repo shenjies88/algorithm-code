@@ -1,0 +1,136 @@
+/*
+test
+
+bwwb
+bbwb
+bwwb
+bwww
+*/
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define N 4
+int step;
+int flag;
+char intput[N+1][N+1];
+int Check()
+{
+
+	for (int i=1;i<=N;i++)
+	{
+		for (int j=1;j<=N;j++)
+		{			
+		
+			if (intput[i][j]!=intput[1][1])
+			{
+				return 0;
+			}			
+		}
+	}
+	return 1;
+}
+
+void Transform(int row,int col)
+{
+	int up=row-1;
+	int left=col-1;
+	int right=col+1;
+	int down=row+1;
+
+	if (intput[row][col]=='b')intput[row][col]='w';
+					else intput[row][col]='b';
+	if (up!=0)
+	{
+		if(intput[up][col]=='b')intput[up][col]='w';
+					else intput[up][col]='b';
+	}
+	if (left!=0)
+	{
+		if(intput[row][left]=='b')intput[row][left]='w';
+					else intput[row][left]='b';
+	}
+	if (right!=N+1)
+	{
+		if(intput[row][right]=='b')intput[row][right]='w';
+					else intput[row][right]='b';
+	}
+	if (down!=N+1)
+	{
+		if(intput[down][col]=='b')intput[down][col]='w';
+					else intput[down][col]='b';
+	}
+
+}
+
+void DSF(int row,int col,int deep)
+{
+	   if(deep==step)   
+	   {  
+		   flag=Check();  
+		   return;  
+	   }  
+	   if(flag || row==5)  
+	   {  
+		   return;  
+	   }  
+	   Transform(row,col);  
+	   if(col<N)  
+	   {  
+		   DSF(row,col+1,deep+1);  
+	   }  
+	   else  
+	   {  
+		   DSF(row+1,1,deep+1);  
+	   }  
+	   if (flag)
+	   {
+		   return;
+	   }
+
+	   Transform(row,col);  
+	   if(col<N)  
+	   {  
+		   DSF(row,col+1,deep);  
+	   }  
+	   else  
+	   {  
+		   DSF(row+1,1,deep);  
+	   }  
+		if (flag)
+		{
+			return;
+		}
+
+}
+int main()
+{
+	for (int i=1;i<=N;i++)
+	{
+		for (int j=1;j<=N;j++)
+		{
+			scanf("%c",&intput[i][j]);
+		}
+		getchar();
+	}
+	for (step=0;step<=N*N;step++)
+	{
+		DSF(1,1,0);
+		if (flag)
+		{
+			break;
+		}
+	}
+	if(flag)
+	{
+		printf("%d",step);
+
+	}
+	else
+	{
+		printf("impossble");
+	}
+
+	return 0;
+}

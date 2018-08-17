@@ -1,0 +1,24 @@
+#include<stdio.h>
+#define N 100000000
+int tab[N];
+int main()
+{
+	int count=0,i,j;
+	for(i=4;i<N;i+=2)//去掉偶数
+		tab[i]=1;
+	for(i=3;i*i<=N;i+=2)//去掉基数
+	{
+		if(tab[i]==0)
+		{
+			for(j=i*i;j<N;j+=2*i)//去掉素数的倍数
+				tab[j]=1;
+		}
+	}
+	for(i=2;i<N;i++)
+	{
+		if(tab[i]==0)
+			count++;
+	}
+	printf("count=%d\n",count);
+	return 0;
+}

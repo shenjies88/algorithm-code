@@ -1,0 +1,13 @@
+#include <cstdio>
+#include <cmath>
+
+int main(void)
+{
+    double n, p;
+    while (2 == scanf("%lf%lf", &n, &p))
+    {
+        printf("%.0f\n", pow(p, 1/n));
+    }
+
+    return 0;
+}

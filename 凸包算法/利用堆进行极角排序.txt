@@ -1,0 +1,67 @@
+#include <iostream>
+#include <cmath>
+using namespace std; 
+#define maxn 100 
+//用堆排序来实现极角排序，关键在于用叉乘比较极角大小 
+struct point{ 
+    int x; 
+    int y; 
+}; 
+typedef struct point point; 
+int n,heapSize; 
+point heap[maxn],O;//极角坐标系原点 
+
+int cross(point p1,point p2){ //p1 叉乘 p2: 小于零表示p1在p2的逆时针方向。 
+    return  
+		(p1.x-O.x)*(p2.y-O.y)-(p2.x-O.x)*(p1.y-O.y); 
+} 
+
+void heapfy(int idx){//保持堆的性质 
+    int l = idx << 1; 
+    int r = idx << 1 |1; 
+    int est; 
+	
+    if(l > heapSize )return; 
+	
+    if(cross(heap[idx],heap[l]) < 0)//左孩子的极角是否比父节点大 
+        est = idx; 
+    else  est = l; 
+	
+    if(r <= heapSize && cross(heap[r],heap[est]) < 0) 
+        est = r;                                //找到极角最大矢量的下标 
+    if(est != idx ){ 
+        swap( heap[est] , heap[idx] ); 
+        heapfy(est);                        
+    } 
+	
+} 
+
+void build(){ 
+    for(int i= heapSize/2; i > 0; i--)   //heap从下标1开始存到 heapSize  / 2 都是内部节点  
+        heapfy(i); 
+} 
+
+void heapSort(){ 
+    heapSize=n; 
+    build();     
+    for(int i=1;i < n; i++){ 
+        swap( heap[1] , heap[heapSize--] ); 
+        heapfy(1); 
+    } 
+} 
+
+int main(){ 
+    while(scanf("%d", &n) != EOF){ 
+        O.x=0; 
+        O.y=0; 
+        for(int i = 1; i <= n; i++) 
+            scanf("%d%d", &heap[i].x, &heap[i].y); 
+		
+        heapSort(); 
+		
+        for(i=1; i <= n; i++) 
+            printf("(%d,%d)\n",heap[i].x,heap[i].y); 
+    } 
+    return 0; 
+} 
+ 

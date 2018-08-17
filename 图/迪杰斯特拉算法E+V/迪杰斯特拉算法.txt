@@ -1,0 +1,148 @@
+#include <iostream>
+#define MAXVALUE 26
+#define MAX 999999
+#define USE 1
+#define NO 0
+typedef struct 
+{	
+	int Ver[MAXVALUE];
+	int Vernum;
+	int Edegsnum;
+	int Arc[MAXVALUE][MAXVALUE];
+	int Kind;
+}G;
+
+
+
+
+
+
+void Outlin(G *T)
+{
+	int i,j;
+	for (i=0;i<T->Vernum;i++)
+	{
+		printf("\t%d",T->Ver[i]);
+	}
+	printf("\n");
+	for (i=0;i<T->Vernum;i++)
+	{
+		printf("%d\t",T->Ver[i]);
+		for (j=0;j<T->Vernum;j++)
+		{
+			if (T->Arc[i][j]==MAX)
+			{
+				printf("无\t");
+			}
+			else
+			{
+				printf("%d\t",T->Arc[i][j]);
+			}
+		}
+		printf("\n");
+	}
+
+}
+
+
+void Initial(G *T)
+{
+	int i,j;
+	printf("请输入图的类型以及顶点和边的数量,有向图1 无向图0:");
+	scanf("%d%d%d",&T->Kind,&T->Vernum,&T->Edegsnum);
+	for (i=0;i<T->Vernum;i++)
+	{
+		for (j=0;j<T->Vernum;j++)
+		{
+			T->Arc[i][j]=MAX;
+		}
+	}
+
+}
+
+
+void CreatG(G *T)
+{
+	int i,j,k,start,end,weight;
+	for (i=1;i<=T->Vernum;i++)
+	{
+		printf("请输入第%d个顶点的值",i);
+		scanf("%d",&T->Ver[i-1]);
+	}
+	for (i=1;i<=T->Edegsnum;i++)
+	{
+		printf("请输入第%d条边的两个节点以及权值:",i);
+		scanf("%d%d%d",&start,&end,&weight);
+		for (k=0;k<start;k++);
+		for (j=0;j<end;j++);
+		T->Arc[k-1][j-1]=weight;
+		if (T->Kind==0)
+		{
+			T->Arc[j-1][k-1]=weight;
+		}	
+	}
+	
+}
+
+
+void RELAX(G *T,int u,int v,int *D)
+{
+	if (D[u]>D[v]+T->Arc[v][u])
+	{
+		D[u]=D[v]+T->Arc[v][u];
+	
+	}
+	
+
+}
+
+
+
+void Dijstral(G *T)
+{
+	int i,j,k,*Distance,*Is,min;
+	Distance=(int*)malloc(T->Vernum*sizeof(int));
+	Is=(int*)malloc(T->Vernum*sizeof(int));
+	for (i=1;i<T->Vernum;i++)
+	{
+		Distance[i]=MAX;
+		Is[i]=NO;
+	}
+	Distance[0]=0;
+	Is[0]=NO;
+
+	for (k=0;k<T->Vernum;k++)
+	{	
+		min=MAX;
+		for (i=0;i<T->Vernum;i++)
+		{
+			if (Distance[i]<min&&Is[i]!=USE)
+			{
+				min=Distance[i];
+				j=i;
+			}
+		}
+
+
+		for (i=0;i<T->Vernum;i++)
+		{
+			if (T->Arc[j][i]!=MAX)
+			{
+				RELAX(T,i,j,Distance);
+			}
+		}
+		Is[j]=USE;
+	}
+}
+
+
+
+
+void main()
+{
+	G t;
+	Initial(&t);
+	CreatG(&t);
+	Outlin(&t);
+	Dijstral(&t);
+}

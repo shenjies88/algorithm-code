@@ -1,0 +1,107 @@
+#include <iostream>
+using namespace std;
+
+typedef struct  
+{
+	int left;
+	int right;
+	
+}Node;
+
+typedef struct tree
+{
+	Node *i;
+	int max;
+	tree *left,*right;
+}Tree;
+
+Tree *creatree(Node i)
+{
+	Tree *s=new Tree;
+	s->i=new Node(i);
+	s->left=s->right=NULL;
+	s->max=i.right;
+	return s;
+}
+
+Tree *Inser(Tree *root,Node i)
+{
+	if (root==NULL)
+	{
+		return creatree(i);
+	}
+	int l=root->i->left;
+	if (i.left<l)
+	{
+		root->left = Inser(root->left,i);
+	}
+	else
+	{
+		root->right = Inser(root->right,i);
+	}
+	if (root->max<i.right)
+		root->max=i.right;
+	return root;
+}
+bool is(Node *P1,Node P2)
+{
+	if (P1->left<P2.right&&P1->right>P2.left)
+		return 1;
+	else return 0;
+}
+
+
+void Display(Tree *root)
+{
+	if (root!=NULL)
+	{
+		Display(root->left);
+		printf("[%d,%d]max=%d\n",root->i->left,root->i->right,root->max);
+		Display(root->right);
+	}
+
+}
+
+Node *Search(Tree *root,Node i)
+{
+	if (root==NULL)return NULL;
+
+	if (is(root->i,i))
+	{
+		return root->i;
+	}
+	if (root!=NULL&&root->left->max>=i.left)
+	{
+		return Search(root->left,i);
+	}
+	else
+	{
+		return Search(root->right,i);
+	}
+}
+
+void main()
+{
+	Tree *root;
+	Node text[]={{15,20},{10,30},{17,19},{5,20},{12,15},{30,40}};
+	int n=sizeof(text)/sizeof(text[0]);
+	Node *res,x={6,7};
+	root=NULL;
+	for (int i=0;i<n;i++)
+	{
+		root=Inser(root,text[i]);
+	}
+	Display(root);
+
+	
+
+	res=Search(root,x);
+	if (res==NULL)
+	{
+		printf("No\n");
+	}
+	else
+	{
+		printf("[%d,%d]",res->left,res->right);
+	}
+}

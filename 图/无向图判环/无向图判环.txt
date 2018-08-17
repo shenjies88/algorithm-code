@@ -1,0 +1,107 @@
+#include <iostream>
+#include <queue>
+#include <functional>
+using namespace std;
+#define N 100
+
+typedef struct node  
+{
+	int data;
+	int flag;
+	node *next;
+}Node;
+
+int len;
+Node Edges[N+10];
+int D[N+10];
+
+queue<Node> q;
+
+void Inser(Node *H,int key1,int key2)
+{
+	Node *p=H;
+
+	if (!p->data)
+	{
+		Node *s;
+		H->data=key1;
+		s=(Node*)malloc(sizeof(Node));
+		s->data=key2;
+		s->next=H->next;
+		H->next=s;
+		
+	}
+	else
+	{
+		Node *s;
+		s=(Node*)malloc(sizeof(Node));
+		s->data=key2;
+		s->next=p->next;
+		p->next=s;
+	}
+}
+
+
+void CY()
+{
+	while(!q.empty())
+	{
+		Node s=q.front();
+		q.pop();
+
+		Edges[s.data].flag=1;
+		Node *p;
+		p=s.next;
+			
+		while (p)
+		{
+			cout<<p->data<<"顶点"<<D[p->data]<<"度"<<endl;
+			D[p->data]--;
+			if(D[p->data]<=1&&!Edges[p->data].flag)
+			{
+				q.push(Edges[p->data]);
+			}
+			p=p->next;
+		}
+	}
+
+	int i;
+	for (i=1;i<=len;i++)
+	{
+		if (D[i]>=2)
+		{
+			cout<<i<<" ";
+		}
+	}
+}
+
+int main()
+{
+	int n;
+	cin>>n;
+	len=n;
+	memset(D,0,sizeof(D));
+	
+	while (n--)
+	{
+		int a,b;
+		cin>>a>>b;
+		Inser(&Edges[a],a,b);
+		Inser(&Edges[b],b,a);
+		D[a]++,D[b]++;
+		cout<<a<<"顶点"<<D[a]<<"度 "<<b<<"顶点"<<D[b]<<"度"<<endl;
+	}
+	
+	int i;
+	for (i=1;i<=len;i++)
+	{
+		cout<<i<<" "<<D[i]<<endl;
+		if(D[i]<=1)
+			q.push(Edges[i]),cout<<"YES"<<endl;
+	}
+
+	CY();
+
+	
+	return 0;
+}

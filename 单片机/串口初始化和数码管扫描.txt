@@ -1,0 +1,72 @@
+#include <REG52.H>
+
+#define FOSC 24000000
+void delay(long t)
+{
+  while(t--);
+}
+void CommInit(unsigned long baud)
+{ 
+  unsigned long reload=FOSC*2/12/32/baud;
+  // Mode 1, 8-bit UART    
+  TMOD=0X21;
+  TH1=0x100-reload;    
+  TL1=0x100-reload;
+  ET1=0;
+  TR1=1;   
+  SCON=0X50;
+  PCON=0X80;
+	PS=1;
+}
+void T0_Init(void)
+{
+  	TMOD|=0x01;
+	TH0=(65536-2000)/256;
+	TL0=(65536-2000)%256;
+	TR0=1;
+	ET0=1;
+	EA=1;
+}
+unsigned char code DispCode[]={0xFC,0x60,0xDA,0xF2,0x66,0xB6,0xBE,0xE0,
+                               0xFE,0xF6,0xEE,0x3E,0x9C,0x7A,0x9E,0x8E,0x00}; 
+unsigned char code BitTab[8]={0xFE,0xFD,0xFB,0xF7,0xEF,0xDF,0xBF,0x7F};
+unsigned char DisBuf[8]={0,0,0,0,0,0,0,0,};
+unsigned char ptDis=0;
+void T0_IRQ(void)interrupt 1
+{
+  TH0=(65536-2000)/256;
+	TL0=(65536-2000)%256;
+	P0=0xFF;
+	P2=DispCode[DisBuf[ptDis]];
+	P0=BitTab[ptDis];
+  ptDis++;
+	if(ptDis>=8)ptDis=0;
+}
+void SysInit(void)
+{
+  CommInit(9600); 
+	T0_Init();
+}
+
+void trans_one(unsigned char uc)
+{
+  	SBUF=uc;  
+	TI=0;     
+	while(!TI);
+}
+void trans_str(unsigned char *ptS)
+{
+ 	 char i=0;
+	while(*ptS!='\0'){trans_one(*ptS);ptS++;}
+}
+
+void main(void)
+{
+	
+
+	SysInit();
+		
+		
+
+  }
+}	

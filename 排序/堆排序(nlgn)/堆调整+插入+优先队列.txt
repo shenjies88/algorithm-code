@@ -1,0 +1,109 @@
+#include <iostream>
+#include <functional>
+#include <queue>
+#include <stack>
+using namespace std;
+
+typedef struct  
+{
+	int data[100];
+	int len;
+}Heap;
+Heap H;
+
+int Parent(int i)
+{
+	return i/2;
+}
+int Left(int i)
+{
+	return i*2;
+}
+int Right(int i)
+{
+	return i*2+1;
+}
+void Adajct(int point)
+{
+	int l=Left(point);
+	int r=Right(point);
+	int lagest;
+	if (l>H.len)
+	{
+		return;
+	}
+	if (l<=H.len&&H.data[l]>H.data[point])
+	{
+		lagest=l;
+	}
+	else lagest=point;
+	if (r<=H.len&&H.data[r]>H.data[lagest])
+	{
+		lagest=r;
+	}
+	if (lagest!=point)
+	{
+		swap(H.data[lagest],H.data[point]);
+		Adajct(lagest);
+	}
+}
+
+void Inser(int key)
+{
+	int l,r,parent,lagest;
+	H.data[++H.len]=key;
+	parent=Parent(H.len);
+	while(parent>=1&&parent*2<=H.len)
+	{
+		l=Left(parent);
+		r=Right(parent);
+		if (l<=H.len&&H.data[l]>H.data[parent])
+		{
+			lagest=l;
+		}
+		else lagest=parent;
+		if (r<=H.len&&H.data[r]>H.data[lagest])
+		{
+			lagest=r;
+		}
+		if (lagest!=parent)
+		{
+			swap(H.data[lagest],H.data[parent]);
+		}
+		else
+		{
+			break;
+		}
+		parent/=2;
+	}
+}
+
+void Deout()
+{
+	int len=H.len;
+	int temp;
+	for (int i=1;i<=len;i++)
+	{
+		temp=H.data[1];
+		H.data[1]=H.data[H.len--];
+		Adajct(1);
+		cout<<temp<<" ";
+	}
+
+}
+
+
+int main()
+{
+	int len=9;
+	int A[9]={32,54,22,11,84,65,41,10,2};
+	H.len=0;
+	for (int i=0;i<len;i++)
+	{
+	
+		Inser(A[i]);
+	}
+	Deout();
+	
+	return 0;
+}

@@ -1,0 +1,17 @@
+#include<stdio.h>
+#define N 100000000
+int tab[N];
+int main()
+{
+	int m,n,tmp,a,b;
+	scanf("%d%d",&m,&n);
+	a=m;b=n;
+	while(n!=0)
+	{
+		tmp=m%n;
+		m=n;
+		n=tmp;
+	}
+	printf("%d %d\n",m,a*b/m);//最大公约数，最小公倍数
+	return 0;
+}

@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define N 500+10
+int Map[N][N];
+
+int Bellman_frod(int Ver)
+{
+	int i,j,k,t;
+	for (k=1;k<=Ver;k++)
+		for (i=1;i<=Ver;i++)
+		{
+			for (j=1;j<=Ver;j++)
+			{
+				t=Map[i][k]+Map[k][j];
+				if (t<Map[i][j])Map[i][j]=t;	
+			}
+			if (Map[i][i]<0)return 1;	
+		}
+	return 0;
+		
+}
+
+int main()
+{
+	int t,n,m,w,i,a,b,c,o;
+	scanf("%d",&t);
+	while(t--)
+	{
+		scanf("%d%d%d",&n,&m,&w);
+		memset(Map,0x3f3f3f3f,sizeof(Map));
+		for (o=1;o<=n;o++)Map[o][o]=0;
+		for (i=1;i<=m;i++)
+		{
+			scanf("%d%d%d",&a,&b,&c);
+			if(c<Map[a][b])Map[a][b]=c,Map[b][a]=c;
+		}
+		for (i=m+1;i<=m+w;i++)
+		{
+			scanf("%d%d%d",&a,&b,&c);
+			Map[a][b]=-c;
+		
+		}
+		if (Bellman_frod(n))
+			printf("YES\n");
+		else printf("NO\n");
+	}
+	return 0;
+}

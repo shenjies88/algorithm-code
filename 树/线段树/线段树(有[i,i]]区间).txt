@@ -1,0 +1,121 @@
+#include <cstdio>  
+#include <cmath>  
+#include <iostream>  
+using namespace std;  
+
+const int MAXNODE = 40; // 1<<19  
+const int MAXST = 10;  
+struct STU{  
+    int grade;  
+    int left,right;  
+}st[MAXNODE];  
+
+int father[MAXST];  
+int Max=-99999;
+
+void BuideTree(int index,int l,int r)
+{
+	st[index].left=l;
+	st[index].right=r;
+	st[index].grade=0;
+	if (l==r)
+	{
+		father[l]=index;
+		return ;
+	}
+	BuideTree(index*2,l,(l+r)/2);
+	BuideTree(index*2+1,(l+r)/2+1,r);
+}
+
+void Updta(int index)
+{
+	if (index==1)
+		return;
+	int parent=index/2;
+	int a=st[parent*2].grade;
+	int b=st[parent*2+1].grade;
+	st[parent].grade=(a>b)?a:b;
+	Updta(parent);
+}
+
+void Check(int index,int l,int r)
+{
+	int i=index;
+	if (st[index].left==l&&st[index].right==r)
+	{
+		Max=(Max<st[index].grade)?st[index].grade:Max;
+		return ;
+	}
+	i*=2;
+	if (l<=st[i].right)
+	{
+		if (r<=st[i].right)
+		{
+			Check(i,l,r);
+		}
+		else{
+			Check(i,l,st[i].right);
+		}
+	}
+	i+=1;
+	if (r>=st[i].left)
+	{
+		if (l>=st[i].left)
+		{
+			Check(i,l,r);
+		}
+		else{
+			Check(i,st[i].left,r);
+		}
+	}
+}
+
+
+void main()
+{
+	int Region,grade,n;
+	scanf("%d%d",&Region,&n);
+	BuideTree(1,1,Region);
+	for (int i=1;i<=Region;i++)
+	{
+			scanf("%d",&grade);
+			st[father[i]].grade=grade;
+			Updta(father[i]);
+	}
+	while(n--)
+	{
+		char o;
+		int a,b;  
+			fflush(stdin);
+            scanf("%c%d%d",&o,&a,&b); 
+			if (o=='Q')
+			{
+				Check(1,a,b);
+				printf("max=%d\n",Max);
+				Max=-9999;
+			}
+			else
+			{
+				st[father[a]].grade=b;
+				Updta(father[a]);
+			}
+	}
+}
+
+// HDU 1754  I Hate It  线段树 -- 单点更新  
+// 有效结点: 20w  
+// 深度达到：(lg20w)/(lg2) +1 .= 18.61 .= 19  
+// 其完全二叉树 总结点 个数为: (1<<19) - 1 个  
+// 区间最大值问题  
+//  
+/*test data 
+5 6 
+1 2 3 4 5 
+Q 1 5 
+U 3 6 
+Q 3 4 
+Q 4 5 
+U 2 9 
+Q 1 5 
+ 
+*/ 

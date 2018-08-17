@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 100+10
+#define MAX 9999999
+typedef struct
+{
+	int Ver;
+	int Num;
+	double arc[N][N];
+}Tu;
+
+double Yongjin[N][N];
+double *D,*S;
+int start;
+
+void Creat(Tu	*G)
+{
+	int a,b,i,j;
+	double n=0;
+	scanf("%d%d%d%lf",&G->Ver,&G->Num,&start,&n);
+	
+	D=(double*)malloc((G->Ver+1)*sizeof(double));
+	S=(double*)malloc((G->Ver+1)*sizeof(double));
+	for (i=1;i<=G->Ver;i++)D[i]=0;
+	D[start]=n;
+	
+	
+	for (i=1;i<=G->Ver;i++)
+		for (j=1;j<=G->Ver;j++)G->arc[i][j]=MAX;
+		
+		for (i=1;i<=G->Num;i++)
+		{
+			scanf("%d%d",&a,&b);
+			scanf("%lf%lf%lf%lf",&G->arc[a][b],&Yongjin[a][b],&G->arc[b]
+				
+				[a],&Yongjin[b][a]);
+		}
+}
+
+int Bellman_frod(Tu *G)
+{
+	int i,j,k;
+	//for (i=1;i<=G->Ver;i++)S[i]=D[i];
+	for (k=1;k<=G->Ver;k++)
+	{
+		for (i=1;i<=G->Ver;i++)
+		{
+			for (j=1;j<=G->Ver;j++)
+			{
+				if (G->arc[i][j]!=MAX)
+				{	
+					if (D[j]<(D[i]-Yongjin[i][j])*G->arc[i][j])
+					{
+						D[j]=(D[i]-Yongjin[i][j])*G->arc[i][j];
+					}
+				}
+			}
+		}
+	}
+
+	for (i=1;i<=G->Ver;i++)
+	{
+		for (j=1;j<=G->Ver;j++)
+		{
+			if (G->arc[i][j]!=MAX)
+			{	
+				if (D[j]<(D[i]-Yongjin[i][j])*G->arc[i][j])
+				{
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+		
+}
+
+int main()
+{
+	Tu	G;
+	Creat(&G);
+	Bellman_frod(&G);
+	if(Bellman_frod(&G))
+	{
+		printf("YES\n");
+	}
+	else
+	{
+		printf("NO\n");
+	}
+	return 0;
+}

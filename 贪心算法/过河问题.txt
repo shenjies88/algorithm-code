@@ -1,0 +1,33 @@
+#include <iostream>
+#include <algorithm>
+#define min(a,b) ((a)>(b))?(a):(b)
+using namespace std;
+
+
+int main()
+{
+	int a[1000],t,n,sum;
+	scanf("%d",&t);
+	while(t--)
+	{
+		scanf("%d",&n);
+		sum=0;
+		for (int i=0;i<n;i++)scanf("%d",&a[i]);
+		while(n>3)
+		{
+			sum=min(sum+a[1]+a[0]+a[n-1]+a[1],sum+a[n-1]+a[0]+a[n-2]+a[0]);
+			n-=2;
+		}
+		if (n==3)sum+=a[0]+a[1]+a[2];
+		else if(n==2)sum+=a[1];
+		else sum+=a[0];
+		printf("%d\n",sum);
+	}
+	return 0;
+}
+
+过河有两种方案 最快和次快过去  最快回来
+	      最慢和次慢过去 次快回来
+
+	      最快和最慢过去 最快回来
+	      最快和次慢过去 最快回来	

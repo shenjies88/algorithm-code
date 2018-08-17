@@ -1,0 +1,44 @@
+XsugarX最近参加了一场同学聚会，饭桌上被灌了许多酒水、果汁、调料。不胜酒力的他决定严格控制饮品摄入量-_-，但是直接拒绝又显得太不厚道，于是，他决定和前来灌他的人玩个游戏。桌上有N个石子，两人轮流拿，第一次不能把石子全部拿光，以后轮到的人不能比前面人拿的石子多。拿走最后一个石子的人可以不喝酒。XsugarX先拿
+
+ 
+
+比如：桌上4个石子，XsugarX先拿的个数如果超过或等于2个（不能全拿），则对手即可拿走剩下的，而当XsugarX拿1个的时候，双方只能交替拿1个石子。于是，可怜的XsugarX这轮就要喝酒了……
+
+ 
+
+再定义，如果XsugarX只准备了一个石子，那么，很遗憾，他需要为他的准备不充分买单，喝吧～（呃，别被绕进去，就是说，1的时候算必输……）
+
+
+#include <stdio.h>  
+#include <string.h>  
+#include <algorithm>  
+using namespace std;  
+  
+int check(int n)  
+{  
+    int i;  
+    long long s = 1;  
+    for(i = 0;i<=100;i++)  
+    {  
+        s*=2;  
+        if(s == n)  
+        return 0;  
+    }  
+    return 1;  
+}  
+  
+int main()  
+{  
+    int t,n,i,s;  
+    scanf("%d",&t);  
+    while(t--)  
+    {  
+        scanf("%d",&n);  
+        if(n == 1)  
+            printf("0\n");  
+        else  
+            printf("%d\n",check(n));  
+    }  
+  
+    return 0;  
+}  

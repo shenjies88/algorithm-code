@@ -1,0 +1,73 @@
+#include <iostream>
+int L;
+int n;
+int DI[300];
+int TI[300];
+int point[4];
+int BestValue=9999999;
+
+
+void Check()
+{
+	int i,j,sum=0;
+	for (i=0;i<n;i++)
+	{
+		for (j=0;j<4;j++)
+		{
+			if (point[j]-DI[i]>=0)
+			{
+				sum+=(point[j]-DI[i])*TI[i];
+				break;
+			}
+		}
+	}
+	if (sum<=BestValue)
+	{
+		BestValue=sum;
+	}
+}
+
+
+
+
+
+
+void DSF(int k,int x)
+{
+	if (k==3)
+	{
+		Check();
+	}
+	else
+	{
+		int i;
+		for (i=x+1;i<L;i++)
+		{
+			point[k]=i;
+			DSF(k+1,point[k]);
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+void main()
+{
+	int i;
+	scanf("%d%d",&n,&L);
+	for (i=0;i<n;i++)
+	{
+		scanf("%d%d",&DI[i],&TI[i]);
+	}
+	point[3]=L;
+	DSF(0,-1);
+}

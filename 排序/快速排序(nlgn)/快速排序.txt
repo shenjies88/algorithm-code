@@ -1,0 +1,42 @@
+#include <stdio.h>
+#define N 8
+void QuicklySort(int B[],int left,int right)
+{
+	int temp=B[left];
+	int low=left;
+	int hgiht=right;
+	if (left<right)
+	{
+		while(low<hgiht)
+		{
+			while(low<hgiht&&B[hgiht]>temp)
+				hgiht--;
+			if (low<hgiht)
+			{
+				B[low]=B[hgiht];
+				low++;
+			}
+			while(low<hgiht&&B[low]<temp)
+				low++;
+			if (low<hgiht)
+			{
+				B[hgiht]=B[low];
+				hgiht--;
+			}
+		}
+		B[low]=temp;
+		QuicklySort(B,low+1,right);
+		QuicklySort(B,left,low);
+	}
+}
+
+main()
+{
+	int i;
+	int A[]={51,68,44,21,87,2,31,4};	
+	QuicklySort(A,0,7);
+	for (i=0;i<N;i++)
+	{
+		printf("%d\t",A[i]);
+	}
+}

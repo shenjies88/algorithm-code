@@ -1,0 +1,31 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int arr[200000];
+
+
+int main()
+{
+	int m,temp=0,t;
+	while(scanf("%d",&m)!=EOF&&m)
+	{
+		for (int i=0;i<m;i++)scanf("%d",&arr[i]);
+		for(i=0;i<m;i++)temp^=arr[i];
+		if(temp==0)printf("NO\n");
+		else
+		{
+			
+			printf("YES\n");
+			for (i=0;i<m;i++)
+			{
+				t=temp^arr[i];
+				if(arr[i]>t)printf("%d %d\n",arr[i],t);
+			}
+		}
+	}
+	return 0;
+}
+
+
+输入0结束，先输入堆数，再输入各个堆的数据，如果YES 输出a堆减去之后还剩b个的数量

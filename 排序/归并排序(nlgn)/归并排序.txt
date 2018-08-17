@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+int n=8;
+int A[]={5,987,11,23,7,61,52,44};
+
+
+Meger(int A[],int p,int q,int r)
+{
+	int i,j,n1,n2,k,*L,*R;
+	n1=q-p+1;
+	n2=r-q;
+
+	L=(int*)malloc((n1+1)*sizeof(int));
+	R=(int*)malloc((n2+1)*sizeof(int));
+
+	for (i=0;i<n1;i++)
+		L[i]=A[p+i];
+	for (j=0;j<n2;j++)
+		R[j]=A[q+j+1];
+
+	L[n1]=9999;
+	R[n2]=9999;
+
+	i=0;
+	j=0;
+
+	for (k=p;k<=r;k++)
+	{
+		if (L[i]<=R[j])
+		{
+			A[k]=L[i];
+			i++;
+		}
+		else
+		{
+			A[k]=R[j];
+			j++;
+		}
+	}
+}
+
+Meger_Sort(int A[],int p,int r)
+{
+	int q;
+	if (p<r)
+	{
+		q=(p+r)/2;
+		Meger_Sort(A,p,q);
+		Meger_Sort(A,q+1,r);
+		Meger(A,p,q,r);
+	}
+}
+
+void main()
+{
+	Meger_Sort(A,0,7);
+}

@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define N 10
+void Swap(int *a,int *b)
+{
+	int c;
+	c=*a;
+	*a=*b;
+	*b=c;
+}
+
+
+int Partition(int A[],int p,int r)//划分  <x的区域和>x的区域
+{
+	int x,i,j;
+	x=A[r];
+	i=p-1;
+	for (j=p;j<=r-1;j++)
+	{
+		if (A[j]<=x)
+		{
+			i+=1;
+			Swap(&A[i],&A[j]);
+		}
+	}
+	Swap(&A[i+1],&A[r]);
+		return i+1;
+	
+}
+
+int RandQuicklySort(int A[],int p,int r)//进行随机算法
+{
+	int i=rand()%(r-p+1)+p;
+	Swap(&A[i],&A[r]);
+	return Partition(A,p,r);
+}
+
+void QuickSort(int A[],int p,int r)//进行划分
+{
+	int q;
+	if (p<r)
+	{
+		q=RandQuicklySort(A,p,r);
+		QuickSort(A,p,q-1);
+		QuickSort(A,q+1,r);
+	}
+}
+
+
+void main()
+{
+	int B[]={321,12,78,14,35,64,21,84,90,11};
+	int i;
+	srand(time(NULL));
+	QuickSort(B,0,9);
+	for (i=0;i<N;i++)
+	{
+		printf("%d ",B[i]);
+	}
+	
+}
+
+

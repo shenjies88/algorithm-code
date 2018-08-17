@@ -1,0 +1,62 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+#define  N 100
+char P[N];
+char T[N];
+int next[N];
+void Next(int len)
+{
+	int i,j;
+	next[0]=-1;
+	for (i=1;i<len;i++)
+	{
+		j=next[i-1];
+		while(j>=0&&P[j+1]!=P[i])
+			j=next[j];
+		next[i]=(P[j+1]==P[i])?j+1:-1;
+	}
+}
+
+void Cmp()
+{
+	int ti,tl,pi,pl;
+	tl=strlen(T);
+	pl=strlen(P);
+	ti=pi=0;
+	while(ti<tl)
+	{
+		if (T[ti]==P[pi])
+		{
+			ti++;
+			pi++;
+		}
+		else
+		{
+			if (pi==0)
+			{
+				ti++;
+			}else
+			{
+				pi=next[pi-1]+1;
+			}
+		}
+		if (pi==pl)
+		{
+			cout<<"Ìø¹ý"<<ti-pl<<"¸ö"<<endl;
+			pi=next[pi-1]+1;
+		}
+	}
+
+}
+
+int main()
+{
+	
+	gets(T);
+	gets(P);
+	int len=strlen(P);
+	Next(len);
+	Cmp();
+	return 0;
+}

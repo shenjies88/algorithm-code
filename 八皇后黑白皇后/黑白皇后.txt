@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <stdlib.h>
+int n=4;
+int i,j;
+int f=2;
+int num[9][9];
+int count=0;
+
+int row_and_col(int row,int col)
+{
+			
+	for (i=1;i<row;i++)
+	{
+		if (num[i][col]==f)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int CheckDJX(int row,int col)
+{
+	for (i=1;i<=n;i++)
+	{
+		for (j=1;j<=n;j++)
+		{
+			
+			
+				if ((abs(i-row)==abs(j-col)||i+j==row+col)&&num[i][j]==f)
+				{
+					return 1;
+				}
+			
+		}
+	}
+	return 0;
+	
+}
+
+void Save(int sznum[][9])
+{
+	for (i=1;i<=n;i++)
+	{
+		for (j=1;j<=n;j++)
+		{
+			sznum[i][j]=num[i][j];
+		}
+	}
+}
+
+void Recovery(int sznum[][9])
+{
+	for (i=1;i<=n;i++)
+	{
+		for (j=1;j<=n;j++)
+		{
+			num[i][j]=sznum[i][j];
+		}
+	}
+}
+void BackTrack(int row)
+{	
+	if (row==n+1)
+	{
+		if (f==2)
+		{
+			f=3;
+			BackTrack(1);
+			f=2;
+		}
+		if (f==3)
+		{
+			
+			count++;
+		}
+		
+	
+	}
+		else
+		{
+			int k;
+			int sznum[9][9];
+			Save(sznum);
+			for (k=1;k<=n;k++)
+			{
+				
+				if (row_and_col(row,k))
+				{
+					continue;
+				}
+				if (CheckDJX(row,k))
+				{
+					continue;
+				}
+				if (num[row][k]==1)
+				{
+					num[row][k]=f;
+				}
+				else
+				{
+					continue;
+				}
+			
+					BackTrack(row+1);
+					Recovery(sznum);
+			}
+				
+		}
+}
+
+
+int main()
+{
+	
+	scanf("%d",&n);
+	
+	for (i=1;i<=n;i++)
+	{
+		
+		for (j=1;j<=n;j++)
+		{
+ 			scanf("%d",&num[i][j]);
+			//num[i][j]=1;
+		}
+		getchar();
+		
+	}
+	BackTrack(1);
+	printf("%d",count);
+	return 0;
+}

@@ -1,0 +1,21 @@
+#include <stdio.h>
+#define max(a,b) ((a)>(b)?a:b)
+
+
+void main()
+{
+	int A[]={-21,21,54,-77,20,56,-87,15};
+	int i,j,tempsum,sum=0;
+	for (i=0;i<8;i++)
+	{
+		
+		tempsum=0;	
+		for (j=0;j<=i;j++)
+		{
+			tempsum=max(A[j],A[j]+tempsum);
+			sum=max(sum,tempsum);
+			
+		}
+	}
+	printf("%d",sum);
+}

@@ -1,0 +1,35 @@
+#include <iostream>  
+#include <cstdio>  
+#include <cstring>  
+#include <cmath>  
+#include <algorithm>  
+using namespace std;  
+int dig[11], place[11];  
+int main()  
+{  
+    int n, m;  
+    int ans = 0;  
+    scanf("%d",&n);  
+    for(int k = 1; k <= n; k++)  
+    {  
+        scanf("%d",&place[k]);   ///把输入的数存在place数组中   
+        dig[place[k]] = k;  ///把输入的数在place中的下标存在dig数组中   
+    }  
+    for(int i = 1; i <= n; i++)  
+    {  
+        if(i != place[i])  
+        {  
+            int x, y;  
+            y = place[i];
+			place[i] = place[dig[i]];
+			place[dig[i]] = y; 
+			
+            x = dig[i];
+			dig[i] = dig[place[i]];
+			dig[place[i]] = x;  
+            ans++;  
+        }  
+    }  
+    printf("%d\n",ans);  
+    return 0;  
+} 

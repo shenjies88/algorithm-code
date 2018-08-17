@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+
+void main()
+{
+	int i,j,n=9;
+	int A[9]={32,54,22,11,84,65,41,10,2};
+	for (n=n/2;n>0;n/=2)
+	{
+		for (i=0;i<n;i++)
+		{
+			for (j=i+n;j<9;j+=n)
+			{
+				if (A[j]<A[j-n])
+				{
+					int temp=A[j];
+					int k=j-n;
+					while(k>=0&&A[k]>temp)
+					{
+						A[k+n]=A[k];
+						k-=n;
+					}
+					A[k+n]=temp;
+				}
+			}
+		}
+	}
+}

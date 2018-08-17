@@ -1,0 +1,168 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct
+{
+	int *data;
+	int lenght;
+	int hepe_size;
+}Dui;
+
+int Parent(int i)
+{
+	return i/2;
+}
+
+int Left(int i)
+{
+	return 2*i;
+}
+
+int Right(int i)
+{
+	return 2*i+1;
+}
+
+void Max_Hepe(Dui *A,int point)//调整
+{
+	int l,r,largest,temp;
+	l=Left(point);
+	r=Right(point);
+	if (l>A->hepe_size&&r>A->hepe_size)
+	{
+		return;
+	}
+	if (l<=A->hepe_size&&A->data[l]>A->data[point])
+	{
+		largest=l;
+	}
+	else largest=point;
+	if (r<=A->hepe_size&&A->data[r]>A->data[largest])
+	{
+		largest=r;
+	}
+	if (largest!=point)
+	{
+		temp=A->data[point];
+		A->data[point]=A->data[largest];
+		A->data[largest]=temp;
+	}
+	else
+	{
+		return;
+	}
+	Max_Hepe(A,largest);
+}
+
+void Bui_Hepe(Dui *A)//自底向上构建堆
+{
+	int i;
+	for (i=A->hepe_size/2;i>=1;i--)
+	{
+		Max_Hepe(A,i);
+	}
+}
+
+int extract_max(Dui *A)
+{
+	int max;
+	if (A->hepe_size<1)
+	{
+		printf("错误\n");
+	}
+	else
+	{
+		max=A->data[1];
+		A->data[1]=A->data[A->hepe_size];
+		A->hepe_size-=1;
+		Max_Hepe(A,1);
+		return max;
+	}
+}
+
+void Inser_Dui(Dui *a,int i,int key)
+{
+	int temp,o;
+	if (key<a->data[i])
+	{
+		return;
+	}
+	a->data[i]=key;
+
+	while(i>1&&a->data[i]>a->data[Parent(i)])
+	{
+		temp=a->data[i];
+		a->data[i]=a->data[Parent(i)];
+		a->data[Parent(i)]=temp;
+		i=Parent(i);
+	}
+
+	for (o=1;o<=a->hepe_size;o++)
+	{
+		printf("%d ",a->data[o]);
+	}
+	
+
+}
+
+void Hepe_Inser(Dui *a,int key)
+{
+	a->hepe_size+=1;
+	a->data[a->hepe_size]=-99999;
+	Inser_Dui(a,a->hepe_size,key);
+}
+
+void Delete_Dui(Dui *a,int i)
+{
+	int k,o;
+	for (k=i;k<a->hepe_size;k++)
+	{
+		a->data[k]=a->data[k+1];
+	}
+
+	a->hepe_size--;
+	
+	for (o=a->hepe_size/2;o>=1;o--)
+	{
+		Max_Hepe(a,o);
+
+	}
+}
+
+void main()
+{
+	int i;
+	int A[9]={0,54,12,99,51,24,34,87,61};
+	Dui x;
+	x.data=(int*)malloc(9*sizeof(int));
+	x.lenght=8;
+	x.hepe_size=0;
+	for (i=1;i<=x.lenght;i++)
+	{
+		x.data[i]=A[i];
+		x.hepe_size++;
+	}
+	
+	Bui_Hepe(&x);
+	
+	for (i=1;i<=x.lenght;i++)
+	{
+		printf("%d ",x.data[i]);
+	}
+	printf("\n");
+
+	
+	Hepe_Inser(&x,89);
+	printf("\n");
+
+	Delete_Dui(&x,5);
+	printf("\n");
+
+	for (i=1;i<=8;i++)
+	{
+		printf("%d ",extract_max(&x));
+	}
+	printf("\n");
+	
+	
+}
