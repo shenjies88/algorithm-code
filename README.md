@@ -1,1 +1,1 @@
-# algorithm-code
+# 纪念大学算法竞赛练习代码
